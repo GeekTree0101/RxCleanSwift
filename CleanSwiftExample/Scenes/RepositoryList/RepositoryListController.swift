@@ -4,66 +4,73 @@ import RxCocoa
 
 protocol RepositoryListDisplayLogic: class {
     
-    func displayErrorStatus(_ error: Error?)
-    func displayRepositoryListItems(_ viewModel: RepositoryListModel.ViewModel)
+    var displayErrorRelay: PublishRelay<Error?> { get }
+    var displayItemsRelay: PublishRelay<RepositoryListModel.ViewModel> { get }
 }
 
-class RepositoryListController: ASViewController<RepositoryListContainerNode> {
+class RepositoryListController: ASViewController<RepositoryListContainerNode> & RepositoryListDisplayLogic {
     
-    private var interactor: RepositoryListInteractorLogic?
+    lazy var presenter = RepositoryListPresenter.init(self)
+    lazy var interactor = RepositoryListInteractor.init(presenter)
+    
     private var router: RepositoryListRouterLogic?
+    
+    var displayErrorRelay: PublishRelay<Error?> = .init()
+    var displayItemsRelay: PublishRelay<RepositoryListModel.ViewModel> = .init()
     
     private var batchContext: ASBatchContext?
     private var items: [Repository] = []
     private var since: Int? {
         return self.items.count == 0 ? nil: self.items.count
     }
-
+    
+    let disposeBag = DisposeBag()
+    
     init() {
         super.init(node: .init())
         self.node.tableNode.delegate = self
         self.node.tableNode.dataSource = self
         self.configureVIP()
+        self.configureDisplay()
     }
     
     func configureVIP() {
         let viewController = self
-        let interactor = RepositoryListInteractor.init()
-        let presenter = RepositoryListPresenter.init()
         let router = RepositoryListRouter.init()
-        
-        viewController.router = router
-        viewController.interactor = interactor
-        
         router.viewController = viewController
-        interactor.presenter = presenter
-        presenter.viewController = viewController
+        viewController.router = router
+    }
+    
+    func configureDisplay() {
+        
+        self.displayItemsRelay
+            .subscribe(onNext: { [weak self] viewModel in
+                guard let self = self else { return }
+                
+                let startIndex = self.items.count
+                self.items.append(contentsOf: viewModel.repos)
+                let indexPaths: [IndexPath] = (startIndex..<startIndex + viewModel.repos.count)
+                    .map({ index in
+                        return IndexPath.init(row: index, section: 0)
+                    })
+                
+                self.node.tableNode.performBatchUpdates({
+                    self.node.tableNode.insertRows(at: indexPaths, with: .fade)
+                }, completion: { fin in
+                    self.batchContext?.completeBatchFetching(fin)
+                })
+            })
+            .disposed(by: disposeBag)
+        
+        self.displayErrorRelay
+            .subscribe(onNext: { [weak self] error in
+                self?.batchContext?.completeBatchFetching(true)
+            })
+            .disposed(by: disposeBag)
     }
     
     required init?(coder aDecoder: NSCoder) {
         fatalError("init(coder:) has not been implemented")
-    }
-}
-
-extension RepositoryListController: RepositoryListDisplayLogic {
-    
-    func displayRepositoryListItems(_ viewModel: RepositoryListModel.ViewModel) {
-        let startIndex = self.items.count
-        self.items.append(contentsOf: viewModel.repos)
-        let indexPaths: [IndexPath] = (startIndex..<startIndex + viewModel.repos.count)
-            .map({ index in
-                return IndexPath.init(row: index, section: 0)
-            })
-        
-        self.node.tableNode.performBatchUpdates({
-            self.node.tableNode.insertRows(at: indexPaths, with: .fade)
-        }, completion: { fin in
-            self.batchContext?.completeBatchFetching(fin)
-        })
-    }
-    
-    func displayErrorStatus(_ error: Error?) {
-        self.batchContext?.completeBatchFetching(true)
     }
 }
 
@@ -99,7 +106,7 @@ extension RepositoryListController: ASTableDelegate {
     func tableNode(_ tableNode: ASTableNode,
                    willBeginBatchFetchWith context: ASBatchContext) {
         
-        self.interactor?.loadMore(RepositoryListModel.Request.init(since: self.since))
+        self.interactor.loadMoreRelay.accept(RepositoryListModel.Request.init(since: self.since))
         self.batchContext = context
     }
 }

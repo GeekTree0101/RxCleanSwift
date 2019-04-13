@@ -1,21 +1,28 @@
 import RxSwift
+import RxCocoa
 
 protocol RepositoryListPresenterLogic: class {
     
-    func load(_ response: RepositoryListModel.Response)
-    func error(_ error: Error?)
+    var loadRelay: PublishRelay<RepositoryListModel.Response> { get }
+    var errorRelay: PublishRelay<Error?> { get }
 }
 
 class RepositoryListPresenter: RepositoryListPresenterLogic {
     
-    weak var viewController: RepositoryListDisplayLogic?
+    public var loadRelay: PublishRelay<RepositoryListModel.Response> = .init()
+    public var errorRelay: PublishRelay<Error?> = .init()
     
-    func load(_ response: RepositoryListModel.Response) {
-        let viewModel = RepositoryListModel.ViewModel.init(repos: response.repos)
-        viewController?.displayRepositoryListItems(viewModel)
-    }
+    private let disposeBag = DisposeBag()
     
-    func error(_ error: Error?) {
-        viewController?.displayErrorStatus(error)
+    init(_ viewController: RepositoryListDisplayLogic) {
+        
+        loadRelay
+            .map({ RepositoryListModel.ViewModel.init(repos: $0.repos) })
+            .bind(to: viewController.displayItemsRelay)
+            .disposed(by: disposeBag)
+        
+        errorRelay
+            .bind(to: viewController.displayErrorRelay)
+            .disposed(by: disposeBag)
     }
 }
