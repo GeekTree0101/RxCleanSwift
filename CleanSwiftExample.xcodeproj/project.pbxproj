@@ -117,7 +117,7 @@
 		9B0767CD22619B230050FBFB /* RepositoryList */ = {
 			isa = PBXGroup;
 			children = (
-				9B0767F52261A6C50050FBFB /* Nodes */,
+				9B0767F52261A6C50050FBFB /* Components */,
 				9B0767BD226199FD0050FBFB /* RepositoryListController.swift */,
 				9B0767D622619C1E0050FBFB /* RepositoryListPresenter.swift */,
 				9B0767D822619C440050FBFB /* RepositoryListInteractor.swift */,
@@ -172,31 +172,31 @@
 			path = Extensions;
 			sourceTree = "<group>";
 		};
-		9B0767F52261A6C50050FBFB /* Nodes */ = {
+		9B0767F52261A6C50050FBFB /* Components */ = {
 			isa = PBXGroup;
 			children = (
 				9B0767F32261A6B30050FBFB /* RepositoryListCellNode.swift */,
 				9B5A87192261C40E00A24E88 /* RepositoryListContainerNode.swift */,
 			);
-			path = Nodes;
+			path = Components;
 			sourceTree = "<group>";
 		};
 		9B5A87112261BC3400A24E88 /* RepositoryShow */ = {
 			isa = PBXGroup;
 			children = (
-				9B5A87122261BC4200A24E88 /* Nodes */,
+				9B5A87122261BC4200A24E88 /* Components */,
 				9B5A87172261BE9800A24E88 /* RepositoryShowController.swift */,
 			);
 			path = RepositoryShow;
 			sourceTree = "<group>";
 		};
-		9B5A87122261BC4200A24E88 /* Nodes */ = {
+		9B5A87122261BC4200A24E88 /* Components */ = {
 			isa = PBXGroup;
 			children = (
 				9B5A87132261BC5100A24E88 /* RepoShowContainerNode.swift */,
 				9B5A87152261BCDA00A24E88 /* RepoShowPinneButtonNode.swift */,
 			);
-			path = Nodes;
+			path = Components;
 			sourceTree = "<group>";
 		};
 		F921DEDA2C3057FA8905419E /* Pods */ = {
