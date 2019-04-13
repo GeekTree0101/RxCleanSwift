@@ -29,6 +29,7 @@
 		9B5A871A2261C40E00A24E88 /* RepositoryListContainerNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A87192261C40E00A24E88 /* RepositoryListContainerNode.swift */; };
 		9B5A871D2261CB3200A24E88 /* RepoShowContainerNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A871B2261CB3200A24E88 /* RepoShowContainerNode.swift */; };
 		9B5A871E2261CB3200A24E88 /* RepoShowPinneButtonNode.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A871C2261CB3200A24E88 /* RepoShowPinneButtonNode.swift */; };
+		9B5A87212261D54400A24E88 /* RepoReactor.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A87202261D54400A24E88 /* RepoReactor.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -56,6 +57,7 @@
 		9B5A87192261C40E00A24E88 /* RepositoryListContainerNode.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryListContainerNode.swift; sourceTree = "<group>"; };
 		9B5A871B2261CB3200A24E88 /* RepoShowContainerNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepoShowContainerNode.swift; sourceTree = "<group>"; };
 		9B5A871C2261CB3200A24E88 /* RepoShowPinneButtonNode.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = RepoShowPinneButtonNode.swift; sourceTree = "<group>"; };
+		9B5A87202261D54400A24E88 /* RepoReactor.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepoReactor.swift; sourceTree = "<group>"; };
 		D0269B71F94FC8A870069417 /* Pods-CleanSwiftExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CleanSwiftExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CleanSwiftExample/Pods-CleanSwiftExample.debug.xcconfig"; sourceTree = "<group>"; };
 		E7E4311CD4531FB9FB223339 /* Pods_CleanSwiftExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CleanSwiftExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -101,6 +103,7 @@
 		9B0767BA226199FD0050FBFB /* CleanSwiftExample */ = {
 			isa = PBXGroup;
 			children = (
+				9B5A871F2261D53700A24E88 /* Reactor */,
 				9B0767F02261A4370050FBFB /* Extensions */,
 				9B0767E822619E0E0050FBFB /* Nodes */,
 				9B0767D422619BED0050FBFB /* Services */,
@@ -197,6 +200,14 @@
 				9B5A871C2261CB3200A24E88 /* RepoShowPinneButtonNode.swift */,
 			);
 			path = Components;
+			sourceTree = "<group>";
+		};
+		9B5A871F2261D53700A24E88 /* Reactor */ = {
+			isa = PBXGroup;
+			children = (
+				9B5A87202261D54400A24E88 /* RepoReactor.swift */,
+			);
+			path = Reactor;
 			sourceTree = "<group>";
 		};
 		F921DEDA2C3057FA8905419E /* Pods */ = {
@@ -313,6 +324,7 @@
 				"${BUILT_PRODUCTS_DIR}/PINCache/PINCache.framework",
 				"${BUILT_PRODUCTS_DIR}/PINOperation/PINOperation.framework",
 				"${BUILT_PRODUCTS_DIR}/PINRemoteImage/PINRemoteImage.framework",
+				"${BUILT_PRODUCTS_DIR}/ReactorKit/ReactorKit.framework",
 				"${BUILT_PRODUCTS_DIR}/RxAlamofire/RxAlamofire.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa/RxCocoa.framework",
 				"${BUILT_PRODUCTS_DIR}/RxCocoa-Texture/RxCocoa_Texture.framework",
@@ -330,6 +342,7 @@
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PINCache.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PINOperation.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/PINRemoteImage.framework",
+				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/ReactorKit.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxAlamofire.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa.framework",
 				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/RxCocoa_Texture.framework",
@@ -351,6 +364,7 @@
 			files = (
 				9B5A871D2261CB3200A24E88 /* RepoShowContainerNode.swift in Sources */,
 				9B0767D922619C440050FBFB /* RepositoryListInteractor.swift in Sources */,
+				9B5A87212261D54400A24E88 /* RepoReactor.swift in Sources */,
 				9B0767D722619C1E0050FBFB /* RepositoryListPresenter.swift in Sources */,
 				9B5A870C2261AD1A00A24E88 /* NetworkService.swift in Sources */,
 				9B0767BE226199FD0050FBFB /* RepositoryListController.swift in Sources */,

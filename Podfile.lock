@@ -17,6 +17,8 @@ PODS:
   - PINRemoteImage/PINCache (3.0.0-beta.13):
     - PINCache (= 3.0.1-beta.6)
     - PINRemoteImage/Core
+  - ReactorKit (1.2.1):
+    - RxSwift (>= 4.0.0)
   - RxAlamofire (4.4.1):
     - RxAlamofire/Core (= 4.4.1)
   - RxAlamofire/Core (4.4.1):
@@ -56,6 +58,7 @@ PODS:
 DEPENDENCIES:
   - BonMot
   - Codextended
+  - ReactorKit
   - RxAlamofire
   - RxCocoa
   - RxCocoa-Texture
@@ -71,6 +74,7 @@ SPEC REPOS:
     - PINCache
     - PINOperation
     - PINRemoteImage
+    - ReactorKit
     - RxAlamofire
     - RxCocoa
     - RxCocoa-Texture
@@ -85,6 +89,7 @@ SPEC CHECKSUMS:
   PINCache: d195fdba255283f7e9900a55e3cced377f431f9b
   PINOperation: a6219e6fc9db9c269eb7a7b871ac193bcf400aac
   PINRemoteImage: d6d51c5d2adda55f1ce30c96e850b6c4ebd2856a
+  ReactorKit: 8be57f0527ad1ac2963cd5c338274a46a01e57a3
   RxAlamofire: ed65f451f5a9a59419b0b9e705043dc01410edd9
   RxCocoa: cbf70265dc65a981d4ac982e513c10cf23df24a0
   RxCocoa-Texture: e93fe1e32772d3f744069aeea16abe38f94ec8b2
@@ -92,6 +97,6 @@ SPEC CHECKSUMS:
   RxSwift: f172070dfd1a93d70a9ab97a5a01166206e1c575
   Texture: fc6e0157201f3a6e503d364c147b1872e365cef4
 
-PODFILE CHECKSUM: a5916731862c9ebdcc2d88f815e4e52700945473
+PODFILE CHECKSUM: 0b809eebfb08b37d6912829457e8b9981fbe5c96
 
 COCOAPODS: 1.5.3

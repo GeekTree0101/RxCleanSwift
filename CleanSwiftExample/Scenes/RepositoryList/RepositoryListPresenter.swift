@@ -17,7 +17,7 @@ class RepositoryListPresenter: RepositoryListPresenterLogic {
     init(_ viewController: RepositoryListDisplayLogic) {
         
         loadRelay
-            .map({ RepositoryListModel.ViewModel.init(repos: $0.repos) })
+            .map({ .init(repoReactors: $0.repos.map({ RepoReactor($0) })) })
             .bind(to: viewController.displayItemsRelay)
             .disposed(by: disposeBag)
         

@@ -1,25 +1,52 @@
 import Foundation
 import AsyncDisplayKit
+import RxSwift
+import ReactorKit
 
-class RepositoryListCellNode: ASCellNode {
+class RepositoryListCellNode: ASCellNode & View {
     
     struct Const {
-        static let cellInsets: UIEdgeInsets = .init(top: 15.0, left: 15.0, bottom: 15.0, right: 15.0)
+        static let cellInsets: UIEdgeInsets =
+            .init(top: 15.0, left: 15.0, bottom: 15.0, right: 15.0)
         static let contentSpacing: CGFloat = 10.0
     }
     
     lazy var profileNode: ProfileNode = .init(scale: .medium)
     lazy var infoNode: InformationNode = .init(align: .start)
     
-    init(repo: Repository) {
+    var disposeBag = DisposeBag()
+    
+    init(_ reactor: RepoReactor) {
+        defer { self.reactor = reactor }
         super.init()
         self.automaticallyManagesSubnodes = true
         self.selectionStyle = .none
-        
-        self.profileNode.rx.url.onNext(repo.user?.profileURL)
-        self.infoNode.rx.title.onNext(repo.user?.username)
-        self.infoNode.rx.subTitle.onNext(repo.desc)
     }
+    
+    func bind(reactor: RepoReactor) {
+        
+        reactor.state.map({ $0.profileURL })
+            .bind(to: profileNode.rx.url)
+            .disposed(by: disposeBag)
+        
+        reactor.state.map({ $0.title })
+            .bind(to: self.infoNode.rx.title,
+                  setNeedsLayout: infoNode)
+            .disposed(by: disposeBag)
+        
+        reactor.state.map({ $0.desc })
+            .bind(to: self.infoNode.rx.subTitle,
+                  setNeedsLayout: infoNode)
+            .disposed(by: disposeBag)
+        
+        reactor.state.map({ $0.isPinned })
+            .bind(to: self.profileNode.rx.isPinned,
+                  setNeedsLayout: self.profileNode)
+            .disposed(by: disposeBag)
+    }
+}
+
+extension RepositoryListCellNode {
     
     override func layoutSpecThatFits(_ constrainedSize: ASSizeRange) -> ASLayoutSpec {
         infoNode.style.flexShrink = 1.0

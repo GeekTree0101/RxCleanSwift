@@ -1,7 +1,9 @@
 import Foundation
 import AsyncDisplayKit
+import RxSwift
+import ReactorKit
 
-class RepoShowContainerNode: ASDisplayNode {
+class RepoShowContainerNode: ASDisplayNode & View {
     
     struct Const {
         static let contentSpacing: CGFloat = 20.0
@@ -52,7 +54,10 @@ class RepoShowContainerNode: ASDisplayNode {
     
     let pinButtonNode = RepoShowPinneButtonNode.init()
     
-    init(repo: Repository) {
+    var disposeBag = DisposeBag()
+    
+    init(reactor: RepoReactor) {
+        defer { self.reactor = reactor }
         super.init()
         self.automaticallyManagesSubnodes = true
         self.automaticallyRelayoutOnSafeAreaChanges = true
@@ -61,10 +66,37 @@ class RepoShowContainerNode: ASDisplayNode {
         self.repoInfoContainerNode.layoutSpecBlock = { [weak self] (_, sizeRange) -> ASLayoutSpec in
             return self?.repoInfoContainerNodeLayoutSpec(sizeRange) ?? ASLayoutSpec()
         }
+    }
+    
+    func bind(reactor: RepoReactor) {
         
-        self.profileNode.rx.url.onNext(repo.user?.profileURL)
-        self.infoNode.rx.title.onNext(repo.user?.username)
-        self.infoNode.rx.subTitle.onNext(repo.desc)
+        reactor.state.map({ $0.profileURL })
+            .bind(to: profileNode.rx.url)
+            .disposed(by: disposeBag)
+        
+        reactor.state.map({ $0.title })
+            .bind(to: self.infoNode.rx.title,
+                  setNeedsLayout: infoNode)
+            .disposed(by: disposeBag)
+        
+        reactor.state.map({ $0.desc })
+            .bind(to: self.infoNode.rx.subTitle,
+                  setNeedsLayout: infoNode)
+            .disposed(by: disposeBag)
+        
+        reactor.state.map({ $0.isPinned })
+            .bind(to: self.profileNode.rx.isPinned,
+                  setNeedsLayout: self.profileNode)
+            .disposed(by: disposeBag)
+        
+        reactor.state.map({ $0.isPinned })
+            .bind(to: self.pinButtonNode.rx.isSelected)
+            .disposed(by: disposeBag)
+        
+        self.pinButtonNode.rx.tap
+            .map { RepoReactor.Action.didTapPin}
+            .bind(to: reactor.action)
+            .disposed(by: disposeBag)
     }
 }
 

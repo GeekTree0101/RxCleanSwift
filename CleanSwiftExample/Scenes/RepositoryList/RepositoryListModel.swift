@@ -16,6 +16,6 @@ struct RepositoryListModel {
     }
     
     struct ViewModel {
-        var repos: [Repository]
+        var repoReactors: [RepoReactor]
     }
 }

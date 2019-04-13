@@ -8,7 +8,8 @@ protocol RepositoryListDisplayLogic: class {
     var displayItemsRelay: PublishRelay<RepositoryListModel.ViewModel> { get }
 }
 
-class RepositoryListController: ASViewController<RepositoryListContainerNode> & RepositoryListDisplayLogic {
+class RepositoryListController:
+ASViewController<RepositoryListContainerNode> & RepositoryListDisplayLogic {
     
     lazy var presenter = RepositoryListPresenter.init(self)
     lazy var interactor = RepositoryListInteractor.init(presenter)
@@ -19,7 +20,7 @@ class RepositoryListController: ASViewController<RepositoryListContainerNode> & 
     var displayItemsRelay: PublishRelay<RepositoryListModel.ViewModel> = .init()
     
     private var batchContext: ASBatchContext?
-    private var items: [Repository] = []
+    private var items: [RepoReactor] = []
     private var since: Int? {
         return self.items.count == 0 ? nil: self.items.count
     }
@@ -48,8 +49,8 @@ class RepositoryListController: ASViewController<RepositoryListContainerNode> & 
                 guard let self = self else { return }
                 
                 let startIndex = self.items.count
-                self.items.append(contentsOf: viewModel.repos)
-                let indexPaths: [IndexPath] = (startIndex..<startIndex + viewModel.repos.count)
+                self.items.append(contentsOf: viewModel.repoReactors)
+                let indexPaths: [IndexPath] = (startIndex..<startIndex + viewModel.repoReactors.count)
                     .map({ index in
                         return IndexPath.init(row: index, section: 0)
                     })
@@ -87,7 +88,7 @@ extension RepositoryListController: ASTableDataSource {
     func tableNode(_ tableNode: ASTableNode, nodeBlockForRowAt indexPath: IndexPath) -> ASCellNodeBlock {
         return {
             guard self.items.count > indexPath.row else { return ASCellNode() }
-            return RepositoryListCellNode(repo: self.items[indexPath.row])
+            return RepositoryListCellNode(self.items[indexPath.row])
         }
     }
 }

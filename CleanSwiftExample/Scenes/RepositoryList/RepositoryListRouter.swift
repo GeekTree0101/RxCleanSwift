@@ -2,16 +2,16 @@ import RxSwift
 
 protocol RepositoryListRouterLogic: class {
     
-    func presentToRepositoryShow(_ repo: Repository)
+    func presentToRepositoryShow(_ reactor: RepoReactor)
 }
 
 class RepositoryListRouter: RepositoryListRouterLogic {
     
     weak var viewController: RepositoryListController?
     
-    func presentToRepositoryShow(_ repo: Repository) {
+    func presentToRepositoryShow(_ reactor: RepoReactor) {
         
-        viewController?.present(RepositoryShowController.init(repo: repo),
+        viewController?.present(RepositoryShowController(reactor: reactor),
                                 animated: true,
                                 completion: nil)
     }
