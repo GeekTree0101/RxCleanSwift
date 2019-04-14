@@ -11,9 +11,7 @@ protocol RepositoryListDisplayLogic: class {
 class RepositoryListController:
 ASViewController<RepositoryListContainerNode> & RepositoryListDisplayLogic {
     
-    lazy var presenter = RepositoryListPresenter.init(self)
-    lazy var interactor = RepositoryListInteractor.init(presenter)
-    
+    private var interactor: RepositoryListInteractor?
     private var router: RepositoryListRouterLogic?
     
     var displayErrorRelay: PublishRelay<Error?> = .init()
@@ -37,9 +35,24 @@ ASViewController<RepositoryListContainerNode> & RepositoryListDisplayLogic {
     
     func configureVIP() {
         let viewController = self
+        let presenter = RepositoryListPresenter()
+        let interactor = RepositoryListInteractor()
         let router = RepositoryListRouter.init()
-        router.viewController = viewController
+        
+        presenter
+            .bind(to: viewController)
+            .disposed(by: disposeBag)
+        
+        interactor
+            .bind(to: presenter)
+            .disposed(by: disposeBag)
+        
+        router
+            .bind(to: viewController)
+            .disposed(by: disposeBag)
+        
         viewController.router = router
+        viewController.interactor = interactor
     }
     
     func configureDisplay() {
@@ -97,7 +110,7 @@ extension RepositoryListController: ASTableDelegate {
     
     func tableNode(_ tableNode: ASTableNode, didSelectRowAt indexPath: IndexPath) {
         guard self.items.count > indexPath.row else { return }
-        self.router?.presentToRepositoryShow(self.items[indexPath.row])
+        self.router?.presentToRepositoryShowRelay.accept(self.items[indexPath.row])
     }
     
     func shouldBatchFetch(for tableNode: ASTableNode) -> Bool {
@@ -107,7 +120,7 @@ extension RepositoryListController: ASTableDelegate {
     func tableNode(_ tableNode: ASTableNode,
                    willBeginBatchFetchWith context: ASBatchContext) {
         
-        self.interactor.loadMoreRelay.accept(RepositoryListModel.Request.init(since: self.since))
+        self.interactor?.loadMoreRelay.accept(RepositoryListModel.Request.init(since: self.since))
         self.batchContext = context
     }
 }

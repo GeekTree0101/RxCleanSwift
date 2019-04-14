@@ -1,18 +1,25 @@
 import RxSwift
+import RxCocoa
 
 protocol RepositoryListRouterLogic: class {
     
-    func presentToRepositoryShow(_ reactor: RepoReactor)
+    var presentToRepositoryShowRelay: PublishRelay<RepoReactor> { get }
 }
 
 class RepositoryListRouter: RepositoryListRouterLogic {
     
-    weak var viewController: RepositoryListController?
+    var presentToRepositoryShowRelay: PublishRelay<RepoReactor> = .init()
     
-    func presentToRepositoryShow(_ reactor: RepoReactor) {
+    func bind(to viewController: RepositoryListController) -> Disposable {
         
-        viewController?.present(RepositoryShowController(reactor: reactor),
-                                animated: true,
-                                completion: nil)
+        let presentToRepoShowDisposable =
+            presentToRepositoryShowRelay
+                .subscribe(onNext: { [weak viewController] reactor in
+                    viewController?.present(RepositoryShowController(reactor: reactor),
+                                            animated: true,
+                                            completion: nil)
+                })
+        
+        return Disposables.create([presentToRepoShowDisposable])
     }
 }

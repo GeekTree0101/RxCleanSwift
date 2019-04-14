@@ -12,17 +12,17 @@ class RepositoryListPresenter: RepositoryListPresenterLogic {
     public var loadRelay: PublishRelay<RepositoryListModel.Response> = .init()
     public var errorRelay: PublishRelay<Error?> = .init()
     
-    private let disposeBag = DisposeBag()
-    
-    init(_ viewController: RepositoryListDisplayLogic) {
+    func bind(to viewController: RepositoryListDisplayLogic) -> Disposable {
         
-        loadRelay
-            .map({ .init(repoReactors: $0.repos.map({ RepoReactor($0) })) })
-            .bind(to: viewController.displayItemsRelay)
-            .disposed(by: disposeBag)
+        let loadDisposable =
+            loadRelay
+                .map({ .init(repoReactors: $0.repos.map({ RepoReactor($0) })) })
+                .bind(to: viewController.displayItemsRelay)
         
-        errorRelay
-            .bind(to: viewController.displayErrorRelay)
-            .disposed(by: disposeBag)
+        let errorDisposable =
+            errorRelay
+                .bind(to: viewController.displayErrorRelay)
+        
+        return Disposables.create([loadDisposable, errorDisposable])
     }
 }

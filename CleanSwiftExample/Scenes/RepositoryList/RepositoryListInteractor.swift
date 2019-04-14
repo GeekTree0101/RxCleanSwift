@@ -11,9 +11,7 @@ class RepositoryListInteractor: RepositoryListInteractorLogic  {
     
     public var loadMoreRelay: PublishRelay<RepositoryListModel.Request> = .init()
     
-    private let disposeBag = DisposeBag()
-    
-    init(_ presenter: RepositoryListPresenterLogic) {
+    func bind(to presenter: RepositoryListPresenterLogic) -> Disposable {
         
         let sharedLoadMore =
             loadMoreRelay
@@ -21,21 +19,21 @@ class RepositoryListInteractor: RepositoryListInteractorLogic  {
                 .map({ RepositoryListModel.Response.init(repos: $0) })
                 .share()
         
-        sharedLoadMore
-            .materialize()
-            .map { event -> Error? in
-                switch event {
-                case .error(let error):
-                    return error
-                default:
-                    return nil
+        let errorDisposable =
+            sharedLoadMore
+                .materialize()
+                .map { event -> Error? in
+                    switch event {
+                    case .error(let error):
+                        return error
+                    default:
+                        return nil
+                    }
                 }
-            }
-            .filterNil()
-            .bind(to: presenter.errorRelay)
-            .disposed(by: disposeBag)
+                .filterNil()
+                .bind(to: presenter.errorRelay)
         
-        sharedLoadMore
+        let loadDisposable = sharedLoadMore
             .materialize()
             .map { event -> RepositoryListModel.Response? in
                 switch event {
@@ -47,6 +45,7 @@ class RepositoryListInteractor: RepositoryListInteractorLogic  {
             }
             .filterNil()
             .bind(to: presenter.loadRelay)
-            .disposed(by: disposeBag)
+        
+        return Disposables.create([errorDisposable, loadDisposable])
     }
 }
