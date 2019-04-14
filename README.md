@@ -15,6 +15,10 @@
 - Have confidence in your tests to catch regression.
 - Apply what you learn to new and existing projects of any size.
 
+## TODO-List
+- Remove ReactorKit Dependency, Replace to RepositoryListCellNode VIP or other methods
+- Write a test code
+
 ## Referrence
 
 <img src="https://cdn-images-1.medium.com/max/2600/1*E39B_vTuUab80MOlWwGjJQ.png" />
