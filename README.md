@@ -1,2 +1,1 @@
-# RxVIP
-- CleanSwift + Rx 
+# VIP(Clean Swift) Example 
