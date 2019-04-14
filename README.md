@@ -18,6 +18,7 @@
 ## TODO-List
 - Remove ReactorKit Dependency, Replace to RepositoryListCellNode VIP or other methods
 - Write a test code
+- Make a templates or copy clean swift basic templates
 
 ## Referrence
 
