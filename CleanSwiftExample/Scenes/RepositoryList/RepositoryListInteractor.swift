@@ -4,12 +4,15 @@ import RxOptional
 
 protocol RepositoryListInteractorLogic: class {
     
-    var loadMoreRelay: PublishRelay<RepositoryListModel.Request> { get }
+    var loadMoreRelay: PublishRelay<RepositoryListModel.RepositorySequence.Request> { get }
+    var didTapRepositoryCell: PublishRelay<RepositoryListModel.RepositoryShow.Request> { get }
 }
 
 class RepositoryListInteractor: RepositoryListInteractorLogic  {
     
-    public var loadMoreRelay: PublishRelay<RepositoryListModel.Request> = .init()
+    public var loadMoreRelay: PublishRelay<RepositoryListModel.RepositorySequence.Request> = .init()
+    public var didTapRepositoryCell: PublishRelay<RepositoryListModel.RepositoryShow.Request> = .init()
+    
     private let worker = RepositoryListWorker(api: RepoAPI.init())
     
     func bind(to presenter: RepositoryListPresenterLogic) -> Disposable {
@@ -19,7 +22,7 @@ class RepositoryListInteractor: RepositoryListInteractorLogic  {
                 .flatMap({ [unowned self] request in
                     return self.worker.load(since: request.since)
                 })
-                .map({ RepositoryListModel.Response.init(repos: $0) })
+                .map({ RepositoryListModel.RepositorySequence.Response(repos: $0) })
                 .share()
         
         let errorDisposable =
@@ -38,7 +41,7 @@ class RepositoryListInteractor: RepositoryListInteractorLogic  {
         
         let loadDisposable = sharedLoadMore
             .materialize()
-            .map { event -> RepositoryListModel.Response? in
+            .map { event -> RepositoryListModel.RepositorySequence.Response? in
                 switch event {
                 case .next(let response):
                     return response
@@ -49,6 +52,13 @@ class RepositoryListInteractor: RepositoryListInteractorLogic  {
             .filterNil()
             .bind(to: presenter.loadRelay)
         
-        return Disposables.create([errorDisposable, loadDisposable])
+        let repoShowDisposable =
+            didTapRepositoryCell
+                .map({ RepositoryListModel.RepositoryShow.Response(repoID: $0.repoID) })
+                .bind(to: presenter.presentRepositoryShow)
+        
+        return Disposables.create([errorDisposable,
+                                   loadDisposable,
+                                   repoShowDisposable])
     }
 }

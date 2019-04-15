@@ -5,7 +5,8 @@ import RxCocoa
 protocol RepositoryListDisplayLogic: class {
     
     var displayErrorRelay: PublishRelay<Error?> { get }
-    var displayItemsRelay: PublishRelay<RepositoryListModel.ViewModel> { get }
+    var displayItemsRelay: PublishRelay<RepositoryListModel.RepositorySequence.ViewModel> { get }
+    var displayPresentToRepositoryShow: PublishRelay<RepositoryListModel.RepositoryShow.ViewModel> { get }
 }
 
 class RepositoryListController:
@@ -15,8 +16,8 @@ ASViewController<RepositoryListContainerNode> & RepositoryListDisplayLogic {
     private var router: RepositoryListRouterLogic?
     
     var displayErrorRelay: PublishRelay<Error?> = .init()
-    var displayItemsRelay: PublishRelay<RepositoryListModel.ViewModel> = .init()
-    var displayMoveToRepositoryShow: PublishRelay<Int> = .init()
+    var displayItemsRelay: PublishRelay<RepositoryListModel.RepositorySequence.ViewModel> = .init()
+    var displayPresentToRepositoryShow: PublishRelay<RepositoryListModel.RepositoryShow.ViewModel> = .init()
     
     private var batchContext: ASBatchContext?
     private var items: [RepoReactor] = []
@@ -82,6 +83,12 @@ ASViewController<RepositoryListContainerNode> & RepositoryListDisplayLogic {
                 self?.batchContext?.completeBatchFetching(true)
             })
             .disposed(by: disposeBag)
+        
+        self.displayPresentToRepositoryShow.map({ $0.repoID })
+            .subscribe(onNext: { [weak self] id in
+                self?.router?.presentToRepositoryShowRelay.accept(id)
+            })
+            .disposed(by: disposeBag)
     }
     
     required init?(coder aDecoder: NSCoder) {
@@ -111,7 +118,8 @@ extension RepositoryListController: ASTableDelegate {
     
     func tableNode(_ tableNode: ASTableNode, didSelectRowAt indexPath: IndexPath) {
         guard self.items.count > indexPath.row else { return }
-        self.router?.presentToRepositoryShowRelay.accept(self.items[indexPath.row].id)
+        let repoID: Int = self.items[indexPath.row].id
+        self.interactor?.didTapRepositoryCell.accept(.init(repoID: repoID))
     }
     
     func shouldBatchFetch(for tableNode: ASTableNode) -> Bool {
@@ -121,7 +129,7 @@ extension RepositoryListController: ASTableDelegate {
     func tableNode(_ tableNode: ASTableNode,
                    willBeginBatchFetchWith context: ASBatchContext) {
         
-        self.interactor?.loadMoreRelay.accept(RepositoryListModel.Request.init(since: self.since))
+        self.interactor?.loadMoreRelay.accept(RepositoryListModel.RepositorySequence.Request(since: self.since))
         self.batchContext = context
     }
 }

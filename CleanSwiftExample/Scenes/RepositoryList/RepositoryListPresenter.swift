@@ -3,14 +3,16 @@ import RxCocoa
 
 protocol RepositoryListPresenterLogic: class {
     
-    var loadRelay: PublishRelay<RepositoryListModel.Response> { get }
+    var loadRelay: PublishRelay<RepositoryListModel.RepositorySequence.Response> { get }
     var errorRelay: PublishRelay<Error?> { get }
-    
+    var presentRepositoryShow: PublishRelay<RepositoryListModel.RepositoryShow.Response> { get }
 }
 
 class RepositoryListPresenter: RepositoryListPresenterLogic {
     
-    public var loadRelay: PublishRelay<RepositoryListModel.Response> = .init()
+    public var loadRelay: PublishRelay<RepositoryListModel.RepositorySequence.Response> = .init()
+    public var presentRepositoryShow: PublishRelay<RepositoryListModel.RepositoryShow.Response> = .init()
+    
     public var errorRelay: PublishRelay<Error?> = .init()
     
     func bind(to viewController: RepositoryListDisplayLogic) -> Disposable {
@@ -24,6 +26,13 @@ class RepositoryListPresenter: RepositoryListPresenterLogic {
             errorRelay
                 .bind(to: viewController.displayErrorRelay)
         
-        return Disposables.create([loadDisposable, errorDisposable])
+        let presentRepoShowDisposable =
+            presentRepositoryShow
+                .map({ RepositoryListModel.RepositoryShow.ViewModel.init(repoID: $0.repoID) })
+                .bind(to: viewController.displayPresentToRepositoryShow)
+        
+        return Disposables.create([loadDisposable,
+                                   errorDisposable,
+                                   presentRepoShowDisposable])
     }
 }

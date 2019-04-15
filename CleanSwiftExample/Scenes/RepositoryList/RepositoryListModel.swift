@@ -3,19 +3,36 @@ import RxCocoa
 
 struct RepositoryListModel {
     
-    struct Request {
-        var since: Int?
+    struct RepositorySequence {
+        struct Request {
+            var since: Int?
+            
+            init(since: Int?) {
+                self.since = since
+            }
+        }
         
-        init(since: Int?) {
-            self.since = since
+        struct Response {
+            var repos: [Repository]
+        }
+        
+        struct ViewModel {
+            var repoReactors: [RepoReactor]
         }
     }
     
-    struct Response {
-        var repos: [Repository]
-    }
-    
-    struct ViewModel {
-        var repoReactors: [RepoReactor]
+    struct RepositoryShow {
+        
+        struct Request {
+            var repoID: Int
+        }
+        
+        struct Response {
+            var repoID: Int
+        }
+        
+        struct ViewModel {
+            var repoID: Int
+        }
     }
 }
