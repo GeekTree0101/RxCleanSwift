@@ -110,7 +110,7 @@ extension RepositoryListController: ASTableDelegate {
     
     func tableNode(_ tableNode: ASTableNode, didSelectRowAt indexPath: IndexPath) {
         guard self.items.count > indexPath.row else { return }
-        self.router?.presentToRepositoryShowRelay.accept(self.items[indexPath.row])
+        self.router?.presentToRepositoryShowRelay.accept(self.items[indexPath.row].id)
     }
     
     func shouldBatchFetch(for tableNode: ASTableNode) -> Bool {

@@ -1,7 +1,18 @@
 import Foundation
 import AsyncDisplayKit
 import RxSwift
+import RxCocoa
+import RxCocoa_Texture
 import ReactorKit
+
+extension Reactive where Base: RepoShowContainerNode {
+    
+    var bindReactor: ASBinder<RepoReactor> {
+        return ASBinder(base) { node, reactor in
+            node.reactor = reactor
+        }
+    }
+}
 
 class RepoShowContainerNode: ASDisplayNode & View {
     
@@ -56,8 +67,7 @@ class RepoShowContainerNode: ASDisplayNode & View {
     
     var disposeBag = DisposeBag()
     
-    init(reactor: RepoReactor) {
-        defer { self.reactor = reactor }
+    override init() {
         super.init()
         self.automaticallyManagesSubnodes = true
         self.automaticallyRelayoutOnSafeAreaChanges = true
