@@ -3,7 +3,7 @@ import RxCocoa
 
 struct RepositoryShowModels {
     
-    struct RepositoryShowComponent {
+    struct Show {
         
         struct Request {
             var id: Int
@@ -29,7 +29,7 @@ struct RepositoryShowModels {
         }
     }
     
-    struct RepositoryShowDismiss {
+    struct Dismiss {
         
         struct Request {
             

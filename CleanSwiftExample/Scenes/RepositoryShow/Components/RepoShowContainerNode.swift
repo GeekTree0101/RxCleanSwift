@@ -71,7 +71,7 @@ class RepoShowContainerNode: ASDisplayNode {
         }
     }
     
-    func bind(state: Observable<RepositoryShowModels.RepositoryShowComponent.ViewModel>) {
+    func bind(state: Observable<RepositoryShowModels.Show.ViewModel>) {
         
         state.map({ $0.profileURL })
             .distinctUntilChanged()

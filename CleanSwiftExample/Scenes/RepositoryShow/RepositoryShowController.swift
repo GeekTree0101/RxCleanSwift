@@ -5,8 +5,8 @@ import ReactorKit
 
 protocol RepositoryShowDisplayLogic: class {
     
-    var displayRepositoryShowState: PublishRelay<RepositoryShowModels.RepositoryShowComponent.ViewModel> { get }
-    var displayDissmiss: PublishRelay<RepositoryShowModels.RepositoryShowDismiss.ViewModel> { get }
+    var displayRepositoryShowState: PublishRelay<RepositoryShowModels.Show.ViewModel> { get }
+    var displayDissmiss: PublishRelay<RepositoryShowModels.Dismiss.ViewModel> { get }
 }
 
 class RepositoryShowController: ASViewController<RepoShowContainerNode> & RepositoryShowDisplayLogic {
@@ -14,10 +14,8 @@ class RepositoryShowController: ASViewController<RepoShowContainerNode> & Reposi
     var interactor: RepositoryShowInteractorLogic?
     var router: RepositoryShowRouterLogic?
     
-    var displayRepositoryShowState:
-        PublishRelay<RepositoryShowModels.RepositoryShowComponent.ViewModel> = .init()
-    var displayDissmiss:
-        PublishRelay<RepositoryShowModels.RepositoryShowDismiss.ViewModel> = .init()
+    var displayRepositoryShowState: PublishRelay<RepositoryShowModels.Show.ViewModel> = .init()
+    var displayDissmiss: PublishRelay<RepositoryShowModels.Dismiss.ViewModel> = .init()
     
     var disposeBag = DisposeBag()
     private var identifier: Int
