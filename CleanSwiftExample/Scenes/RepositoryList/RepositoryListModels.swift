@@ -1,7 +1,7 @@
 import RxSwift
 import RxCocoa
 
-struct RepositoryListModel {
+struct RepositoryListModels {
     
     struct RepositorySequence {
         struct Request {

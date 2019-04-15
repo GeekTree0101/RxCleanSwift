@@ -5,7 +5,8 @@ import ReactorKit
 
 protocol RepositoryShowDisplayLogic: class {
     
-    var displayShowReactor: PublishRelay<RepositoryShowModel.ViewModel> { get }
+    var displayShowReactor: PublishRelay<RepositoryShowModels.RepositoryShowComponent.ViewModel> { get }
+    var displayDissmiss: PublishRelay<RepositoryShowModels.RepositoryShowDismiss.ViewModel> { get }
 }
 
 class RepositoryShowController: ASViewController<RepoShowContainerNode> & RepositoryShowDisplayLogic {
@@ -13,7 +14,8 @@ class RepositoryShowController: ASViewController<RepoShowContainerNode> & Reposi
     var interactor: RepositoryShowInteractorLogic?
     var router: RepositoryShowRouterLogic?
     
-    var displayShowReactor: PublishRelay<RepositoryShowModel.ViewModel> = .init()
+    var displayShowReactor: PublishRelay<RepositoryShowModels.RepositoryShowComponent.ViewModel> = .init()
+    var displayDissmiss: PublishRelay<RepositoryShowModels.RepositoryShowDismiss.ViewModel> = .init()
     
     var disposeBag = DisposeBag()
     
@@ -21,7 +23,6 @@ class RepositoryShowController: ASViewController<RepoShowContainerNode> & Reposi
         super.init(node: .init())
         self.configureVIPCycle()
         self.configureDisplay()
-        self.configureRouter()
         
         self.interactor?.loadRepository.accept(.init(id: id))
     }
@@ -47,13 +48,17 @@ class RepositoryShowController: ASViewController<RepoShowContainerNode> & Reposi
             .bind(to: self.node.rx.bindReactor,
                   setNeedsLayout: self.node)
             .disposed(by: disposeBag)
-    }
-    
-    func configureRouter() {
-        guard let router = self.router else { return }
+        
+        self.displayDissmiss
+            .subscribe(onNext: { [weak self] _ in
+                self?.router?.dismiss.accept(())
+            })
+            .disposed(by: disposeBag)
         
         self.node.dismissButtonNode.rx.tap
-            .bind(to: router.dismiss)
+            .subscribe(onNext: { [weak self] _ in
+                self?.interactor?.didTapDismissButton.accept(.init())
+            })
             .disposed(by: disposeBag)
     }
     

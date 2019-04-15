@@ -5,8 +5,8 @@ import RxCocoa
 protocol RepositoryListDisplayLogic: class {
     
     var displayErrorRelay: PublishRelay<Error?> { get }
-    var displayItemsRelay: PublishRelay<RepositoryListModel.RepositorySequence.ViewModel> { get }
-    var displayPresentToRepositoryShow: PublishRelay<RepositoryListModel.RepositoryShow.ViewModel> { get }
+    var displayItemsRelay: PublishRelay<RepositoryListModels.RepositorySequence.ViewModel> { get }
+    var displayPresentToRepositoryShow: PublishRelay<RepositoryListModels.RepositoryShow.ViewModel> { get }
 }
 
 class RepositoryListController:
@@ -16,8 +16,8 @@ ASViewController<RepositoryListContainerNode> & RepositoryListDisplayLogic {
     private var router: RepositoryListRouterLogic?
     
     var displayErrorRelay: PublishRelay<Error?> = .init()
-    var displayItemsRelay: PublishRelay<RepositoryListModel.RepositorySequence.ViewModel> = .init()
-    var displayPresentToRepositoryShow: PublishRelay<RepositoryListModel.RepositoryShow.ViewModel> = .init()
+    var displayItemsRelay: PublishRelay<RepositoryListModels.RepositorySequence.ViewModel> = .init()
+    var displayPresentToRepositoryShow: PublishRelay<RepositoryListModels.RepositoryShow.ViewModel> = .init()
     
     private var batchContext: ASBatchContext?
     private var items: [RepoReactor] = []
@@ -129,7 +129,7 @@ extension RepositoryListController: ASTableDelegate {
     func tableNode(_ tableNode: ASTableNode,
                    willBeginBatchFetchWith context: ASBatchContext) {
         
-        self.interactor?.loadMoreRelay.accept(RepositoryListModel.RepositorySequence.Request(since: self.since))
+        self.interactor?.loadMoreRelay.accept(RepositoryListModels.RepositorySequence.Request(since: self.since))
         self.batchContext = context
     }
 }

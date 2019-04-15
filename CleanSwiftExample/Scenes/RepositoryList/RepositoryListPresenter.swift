@@ -3,15 +3,15 @@ import RxCocoa
 
 protocol RepositoryListPresenterLogic: class {
     
-    var loadRelay: PublishRelay<RepositoryListModel.RepositorySequence.Response> { get }
+    var loadRelay: PublishRelay<RepositoryListModels.RepositorySequence.Response> { get }
     var errorRelay: PublishRelay<Error?> { get }
-    var presentRepositoryShow: PublishRelay<RepositoryListModel.RepositoryShow.Response> { get }
+    var presentRepositoryShow: PublishRelay<RepositoryListModels.RepositoryShow.Response> { get }
 }
 
 class RepositoryListPresenter: RepositoryListPresenterLogic {
     
-    public var loadRelay: PublishRelay<RepositoryListModel.RepositorySequence.Response> = .init()
-    public var presentRepositoryShow: PublishRelay<RepositoryListModel.RepositoryShow.Response> = .init()
+    public var loadRelay: PublishRelay<RepositoryListModels.RepositorySequence.Response> = .init()
+    public var presentRepositoryShow: PublishRelay<RepositoryListModels.RepositoryShow.Response> = .init()
     
     public var errorRelay: PublishRelay<Error?> = .init()
     
@@ -28,7 +28,7 @@ class RepositoryListPresenter: RepositoryListPresenterLogic {
         
         let presentRepoShowDisposable =
             presentRepositoryShow
-                .map({ RepositoryListModel.RepositoryShow.ViewModel.init(repoID: $0.repoID) })
+                .map({ RepositoryListModels.RepositoryShow.ViewModel.init(repoID: $0.repoID) })
                 .bind(to: viewController.displayPresentToRepositoryShow)
         
         return Disposables.create([loadDisposable,

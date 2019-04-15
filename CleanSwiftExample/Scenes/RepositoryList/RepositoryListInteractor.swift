@@ -4,14 +4,14 @@ import RxOptional
 
 protocol RepositoryListInteractorLogic: class {
     
-    var loadMoreRelay: PublishRelay<RepositoryListModel.RepositorySequence.Request> { get }
-    var didTapRepositoryCell: PublishRelay<RepositoryListModel.RepositoryShow.Request> { get }
+    var loadMoreRelay: PublishRelay<RepositoryListModels.RepositorySequence.Request> { get }
+    var didTapRepositoryCell: PublishRelay<RepositoryListModels.RepositoryShow.Request> { get }
 }
 
 class RepositoryListInteractor: RepositoryListInteractorLogic  {
     
-    public var loadMoreRelay: PublishRelay<RepositoryListModel.RepositorySequence.Request> = .init()
-    public var didTapRepositoryCell: PublishRelay<RepositoryListModel.RepositoryShow.Request> = .init()
+    public var loadMoreRelay: PublishRelay<RepositoryListModels.RepositorySequence.Request> = .init()
+    public var didTapRepositoryCell: PublishRelay<RepositoryListModels.RepositoryShow.Request> = .init()
     
     private let worker = RepositoryListWorker(api: RepoAPI.init())
     
@@ -22,7 +22,7 @@ class RepositoryListInteractor: RepositoryListInteractorLogic  {
                 .flatMap({ [unowned self] request in
                     return self.worker.load(since: request.since)
                 })
-                .map({ RepositoryListModel.RepositorySequence.Response(repos: $0) })
+                .map({ RepositoryListModels.RepositorySequence.Response(repos: $0) })
                 .share()
         
         let errorDisposable =
@@ -41,7 +41,7 @@ class RepositoryListInteractor: RepositoryListInteractorLogic  {
         
         let loadDisposable = sharedLoadMore
             .materialize()
-            .map { event -> RepositoryListModel.RepositorySequence.Response? in
+            .map { event -> RepositoryListModels.RepositorySequence.Response? in
                 switch event {
                 case .next(let response):
                     return response
@@ -54,7 +54,7 @@ class RepositoryListInteractor: RepositoryListInteractorLogic  {
         
         let repoShowDisposable =
             didTapRepositoryCell
-                .map({ RepositoryListModel.RepositoryShow.Response(repoID: $0.repoID) })
+                .map({ RepositoryListModels.RepositoryShow.Response(repoID: $0.repoID) })
                 .bind(to: presenter.presentRepositoryShow)
         
         return Disposables.create([errorDisposable,

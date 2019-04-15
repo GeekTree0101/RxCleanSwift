@@ -3,19 +3,25 @@ import RxCocoa
 
 protocol RepositoryShowPresenterLogic: class {
     
-    var repositoryResponse: PublishRelay<RepositoryShowModel.Response> { get }
+    var repositoryResponse: PublishRelay<RepositoryShowModels.RepositoryShowComponent.Response> { get }
+    var dismissRepositoryShow: PublishRelay<RepositoryShowModels.RepositoryShowDismiss.Response> { get }
 }
 
 class RepositoryShowPresenter: RepositoryShowPresenterLogic {
     
-    var repositoryResponse: PublishRelay<RepositoryShowModel.Response> = .init()
+    var repositoryResponse: PublishRelay<RepositoryShowModels.RepositoryShowComponent.Response> = .init()
+    var dismissRepositoryShow: PublishRelay<RepositoryShowModels.RepositoryShowDismiss.Response> = .init()
     
     func bind(to viewController: RepositoryShowDisplayLogic) -> Disposable {
         
-        let disposable = repositoryResponse
-            .map({ RepositoryShowModel.ViewModel(repoReactor: .init($0.repo)) })
+        let repositoryDisposable = repositoryResponse
+            .map({ RepositoryShowModels.RepositoryShowComponent.ViewModel(repoReactor: .init($0.repo)) })
             .bind(to: viewController.displayShowReactor)
         
-        return Disposables.create([disposable])
+        let dismissDisposable = dismissRepositoryShow
+            .map({ _ in  return RepositoryShowModels.RepositoryShowDismiss.ViewModel() })
+            .bind(to: viewController.displayDissmiss)
+        
+        return Disposables.create([repositoryDisposable, dismissDisposable])
     }
 }
