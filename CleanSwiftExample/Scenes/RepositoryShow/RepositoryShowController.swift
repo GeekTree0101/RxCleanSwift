@@ -5,7 +5,7 @@ import ReactorKit
 
 protocol RepositoryShowDisplayLogic: class {
     
-    var displayShowReactor: PublishRelay<RepositoryShowModels.RepositoryShowComponent.ViewModel> { get }
+    var displayRepositoryShowState: PublishRelay<RepositoryShowModels.RepositoryShowComponent.ViewModel> { get }
     var displayDissmiss: PublishRelay<RepositoryShowModels.RepositoryShowDismiss.ViewModel> { get }
 }
 
@@ -14,16 +14,19 @@ class RepositoryShowController: ASViewController<RepoShowContainerNode> & Reposi
     var interactor: RepositoryShowInteractorLogic?
     var router: RepositoryShowRouterLogic?
     
-    var displayShowReactor: PublishRelay<RepositoryShowModels.RepositoryShowComponent.ViewModel> = .init()
-    var displayDissmiss: PublishRelay<RepositoryShowModels.RepositoryShowDismiss.ViewModel> = .init()
+    var displayRepositoryShowState:
+        PublishRelay<RepositoryShowModels.RepositoryShowComponent.ViewModel> = .init()
+    var displayDissmiss:
+        PublishRelay<RepositoryShowModels.RepositoryShowDismiss.ViewModel> = .init()
     
     var disposeBag = DisposeBag()
+    private var identifier: Int
     
     init(_ id: Int) {
-        super.init(node: .init())
+        self.identifier = id
+        super.init(node: .init(id: id))
         self.configureVIPCycle()
-        self.configureDisplay()
-        
+        self.binding()
         self.interactor?.loadRepository.accept(.init(id: id))
     }
     
@@ -41,24 +44,18 @@ class RepositoryShowController: ASViewController<RepoShowContainerNode> & Reposi
         viewController.router = router
     }
     
-    func configureDisplay() {
+    func binding() {
+        guard let interactor = self.interactor,
+            let router = self.router else {
+            return
+        }
         
-        self.displayShowReactor
-            .map({ $0.repoReactor })
-            .bind(to: self.node.rx.bindReactor,
-                  setNeedsLayout: self.node)
-            .disposed(by: disposeBag)
+        self.node.bind(state: self.displayRepositoryShowState.asObservable())
+        self.node.bind(action: interactor)
         
         self.displayDissmiss
-            .subscribe(onNext: { [weak self] _ in
-                self?.router?.dismiss.accept(())
-            })
-            .disposed(by: disposeBag)
-        
-        self.node.dismissButtonNode.rx.tap
-            .subscribe(onNext: { [weak self] _ in
-                self?.interactor?.didTapDismissButton.accept(.init())
-            })
+            .map({ _ in return })
+            .bind(to: router.dismiss)
             .disposed(by: disposeBag)
     }
     

@@ -3,18 +3,8 @@ import AsyncDisplayKit
 import RxSwift
 import RxCocoa
 import RxCocoa_Texture
-import ReactorKit
 
-extension Reactive where Base: RepoShowContainerNode {
-    
-    var bindReactor: ASBinder<RepoReactor> {
-        return ASBinder(base) { node, reactor in
-            node.reactor = reactor
-        }
-    }
-}
-
-class RepoShowContainerNode: ASDisplayNode & View {
+class RepoShowContainerNode: ASDisplayNode {
     
     struct Const {
         static let contentSpacing: CGFloat = 20.0
@@ -67,7 +57,10 @@ class RepoShowContainerNode: ASDisplayNode & View {
     
     var disposeBag = DisposeBag()
     
-    override init() {
+    private let repoID: Int
+    
+    init(id: Int) {
+        self.repoID = id
         super.init()
         self.automaticallyManagesSubnodes = true
         self.automaticallyRelayoutOnSafeAreaChanges = true
@@ -78,39 +71,48 @@ class RepoShowContainerNode: ASDisplayNode & View {
         }
     }
     
-    func bind(reactor: RepoReactor) {
+    func bind(state: Observable<RepositoryShowModels.RepositoryShowComponent.ViewModel>) {
         
-        reactor.state.map({ $0.profileURL })
+        state.map({ $0.profileURL })
             .distinctUntilChanged()
             .bind(to: profileNode.rx.url)
             .disposed(by: disposeBag)
         
-        reactor.state.map({ $0.title })
+        state.map({ $0.title })
             .distinctUntilChanged()
             .bind(to: self.infoNode.rx.title,
                   setNeedsLayout: infoNode)
             .disposed(by: disposeBag)
         
-        reactor.state.map({ $0.desc })
+        state.map({ $0.desc })
             .distinctUntilChanged()
             .bind(to: self.infoNode.rx.subTitle,
                   setNeedsLayout: infoNode)
             .disposed(by: disposeBag)
         
-        reactor.state.map({ $0.isPinned })
+        state.map({ $0.isPinned })
             .distinctUntilChanged()
             .bind(to: self.profileNode.rx.isPinned,
                   setNeedsLayout: self.profileNode)
             .disposed(by: disposeBag)
         
-        reactor.state.map({ $0.isPinned })
+        state.map({ $0.isPinned })
             .distinctUntilChanged()
             .bind(to: self.pinButtonNode.rx.isSelected)
             .disposed(by: disposeBag)
+    }
+    
+    func bind(action: RepositoryShowInteractorLogic) {
         
         self.pinButtonNode.rx.tap
-            .map { RepoReactor.Action.didTapPin}
-            .bind(to: reactor.action)
+            .withLatestFrom(Observable.just(self.repoID))
+            .map({ .init(id: $0) })
+            .bind(to: action.didTapPin)
+            .disposed(by: disposeBag)
+        
+        self.dismissButtonNode.rx.tap
+            .map { .init() }
+            .bind(to: action.didTapDismissButton)
             .disposed(by: disposeBag)
     }
 }

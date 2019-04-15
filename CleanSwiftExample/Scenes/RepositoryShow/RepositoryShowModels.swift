@@ -14,7 +14,18 @@ struct RepositoryShowModels {
         }
         
         struct ViewModel {
-            var repoReactor: RepoReactor
+            
+            var profileURL: URL?
+            var title: String?
+            var desc: String?
+            var isPinned: Bool
+            
+            init(_ repo: Repository) {
+                self.profileURL =  repo.user?.profileURL
+                self.title = repo.user?.username
+                self.desc = repo.desc
+                self.isPinned = repo.isPinned
+            }
         }
     }
     
