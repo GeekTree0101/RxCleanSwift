@@ -10,12 +10,14 @@ protocol RepositoryShowInteractorLogic: class {
 class RepositoryShowInteractor: RepositoryShowInteractorLogic  {
     
     var loadRepository: PublishRelay<RepositoryShowModel.Request> = .init()
+    private let worker = RepositoryShowWorker()
     
     func bind(to presenter: RepositoryShowPresenterLogic) -> Disposable {
         
         let disposeable = loadRepository
-            .map({ $0.id })
-            .flatMap({ RepositoryShowWorker.loadCachedRepository($0) })
+            .flatMap({ [unowned self] request in
+                return self.worker.loadCachedRepository(request.id)
+            })
             .map({ RepositoryShowModel.Response(repo: $0) })
             .bind(to: presenter.repositoryResponse)
         

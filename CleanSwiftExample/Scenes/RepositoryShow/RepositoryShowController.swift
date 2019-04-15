@@ -11,7 +11,7 @@ protocol RepositoryShowDisplayLogic: class {
 class RepositoryShowController: ASViewController<RepoShowContainerNode> & RepositoryShowDisplayLogic {
     
     var interactor: RepositoryShowInteractorLogic?
-    var router: RepositoryShowRouter?
+    var router: RepositoryShowRouterLogic?
     
     var displayShowReactor: PublishRelay<RepositoryShowModel.ViewModel> = .init()
     

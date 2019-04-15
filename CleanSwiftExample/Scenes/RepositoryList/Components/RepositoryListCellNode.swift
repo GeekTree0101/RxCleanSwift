@@ -26,20 +26,24 @@ class RepositoryListCellNode: ASCellNode & View {
     func bind(reactor: RepoReactor) {
         
         reactor.state.map({ $0.profileURL })
+            .distinctUntilChanged()
             .bind(to: profileNode.rx.url)
             .disposed(by: disposeBag)
         
         reactor.state.map({ $0.title })
+            .distinctUntilChanged()
             .bind(to: self.infoNode.rx.title,
                   setNeedsLayout: infoNode)
             .disposed(by: disposeBag)
         
         reactor.state.map({ $0.desc })
+            .distinctUntilChanged()
             .bind(to: self.infoNode.rx.subTitle,
                   setNeedsLayout: infoNode)
             .disposed(by: disposeBag)
         
         reactor.state.map({ $0.isPinned })
+            .distinctUntilChanged()
             .bind(to: self.profileNode.rx.isPinned,
                   setNeedsLayout: self.profileNode)
             .disposed(by: disposeBag)

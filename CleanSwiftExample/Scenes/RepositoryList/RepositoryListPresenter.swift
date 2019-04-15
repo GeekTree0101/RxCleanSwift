@@ -5,6 +5,7 @@ protocol RepositoryListPresenterLogic: class {
     
     var loadRelay: PublishRelay<RepositoryListModel.Response> { get }
     var errorRelay: PublishRelay<Error?> { get }
+    
 }
 
 class RepositoryListPresenter: RepositoryListPresenterLogic {

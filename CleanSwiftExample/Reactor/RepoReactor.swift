@@ -5,6 +5,7 @@ class RepoReactor: Reactor {
     
     enum Action {
         case didTapPin
+        case updateRepository(Repository)
     }
     
     struct State {
@@ -12,6 +13,13 @@ class RepoReactor: Reactor {
         var title: String?
         var desc: String?
         var isPinned: Bool
+        
+        init(_ repo: Repository) {
+            self.profileURL =  repo.user?.profileURL
+            self.title = repo.user?.username
+            self.desc = repo.desc
+            self.isPinned = repo.isPinned
+        }
     }
     
     var id: Int
@@ -21,15 +29,11 @@ class RepoReactor: Reactor {
     
     init(_ repo: Repository) {
         self.id = repo.id
-        initialState = State.init(profileURL: repo.user?.profileURL,
-                                  title: repo.user?.username,
-                                  desc: repo.desc,
-                                  isPinned: repo.isPinned)
+        initialState = State(repo)
         
-        DataProvider.shared.observe(.repository(repo.id), type: Repository.self)
-            .withLatestFrom(self.state) { ($0, $1) }
-            .filter({ $0.0.isPinned != $0.1.isPinned })
-            .map({ _ in return Action.didTapPin })
+        DataProvider.shared
+            .observe(.repository(repo.id), type: Repository.self)
+            .map({ Action.updateRepository($0) })
             .bind(to: self.action)
             .disposed(by: disposeBag)
     }
@@ -46,6 +50,8 @@ class RepoReactor: Reactor {
             }
             
             newState.isPinned = !state.isPinned
+        case .updateRepository(let repo):
+            newState = State(repo)
         }
         
         return newState

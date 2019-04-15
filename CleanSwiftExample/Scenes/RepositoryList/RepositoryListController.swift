@@ -11,11 +11,12 @@ protocol RepositoryListDisplayLogic: class {
 class RepositoryListController:
 ASViewController<RepositoryListContainerNode> & RepositoryListDisplayLogic {
     
-    private var interactor: RepositoryListInteractor?
+    private var interactor: RepositoryListInteractorLogic?
     private var router: RepositoryListRouterLogic?
     
     var displayErrorRelay: PublishRelay<Error?> = .init()
     var displayItemsRelay: PublishRelay<RepositoryListModel.ViewModel> = .init()
+    var displayMoveToRepositoryShow: PublishRelay<Int> = .init()
     
     private var batchContext: ASBatchContext?
     private var items: [RepoReactor] = []
@@ -29,11 +30,11 @@ ASViewController<RepositoryListContainerNode> & RepositoryListDisplayLogic {
         super.init(node: .init())
         self.node.tableNode.delegate = self
         self.node.tableNode.dataSource = self
-        self.configureVIP()
+        self.configureVIPCycle()
         self.configureDisplay()
     }
     
-    func configureVIP() {
+    func configureVIPCycle() {
         let viewController = self
         let presenter = RepositoryListPresenter()
         let interactor = RepositoryListInteractor()

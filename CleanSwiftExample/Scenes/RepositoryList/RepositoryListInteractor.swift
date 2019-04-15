@@ -10,12 +10,15 @@ protocol RepositoryListInteractorLogic: class {
 class RepositoryListInteractor: RepositoryListInteractorLogic  {
     
     public var loadMoreRelay: PublishRelay<RepositoryListModel.Request> = .init()
+    private let worker = RepositoryListWorker(api: RepoAPI.init())
     
     func bind(to presenter: RepositoryListPresenterLogic) -> Disposable {
         
         let sharedLoadMore =
             loadMoreRelay
-                .flatMap({ RepositoryListWorker.load(since: $0.since) })
+                .flatMap({ [unowned self] request in
+                    return self.worker.load(since: request.since)
+                })
                 .map({ RepositoryListModel.Response.init(repos: $0) })
                 .share()
         
