@@ -24,11 +24,11 @@ class RepositoryShowController: ASViewController<RepoShowContainerNode> & Reposi
         self.identifier = id
         super.init(node: .init(id: id))
         self.configureVIPCycle()
-        self.binding()
         self.interactor?.loadRepository.accept(.init(id: id))
     }
     
     func configureVIPCycle() {
+        // configure VIP Cycle
         let viewController = self
         let interactor = RepositoryShowInteractor.init()
         let presenter = RepositoryShowPresenter.init()
@@ -40,13 +40,8 @@ class RepositoryShowController: ASViewController<RepoShowContainerNode> & Reposi
         
         viewController.interactor = interactor
         viewController.router = router
-    }
-    
-    func binding() {
-        guard let interactor = self.interactor,
-            let router = self.router else {
-            return
-        }
+        
+        // Binding VIP
         
         self.node.bind(state: self.displayRepositoryShowState.asObservable())
         self.node.bind(action: interactor)
