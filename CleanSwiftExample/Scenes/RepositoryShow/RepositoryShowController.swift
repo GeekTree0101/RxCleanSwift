@@ -17,13 +17,15 @@ class RepositoryShowController: ASViewController<RepoShowContainerNode> & Reposi
     var displayDissmiss: PublishRelay<RepositoryShowModels.Dismiss.ViewModel> = .init()
     
     var disposeBag = DisposeBag()
-    private var identifier: Int
     
-    init(_ id: Int) {
-        self.identifier = id
-        super.init(node: .init(id: id))
+    init() {
+        super.init(node: .init())
         self.configureVIPCycle()
-        self.interactor?.loadRepository.accept(.init(id: id))
+    }
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        self.interactor?.loadRepository.accept(.init())
     }
     
     func configureVIPCycle() {

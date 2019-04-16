@@ -14,7 +14,7 @@ struct RepositoryListModels {
         }
         
         struct Response {
-            var repos: [Repository]
+            var repos: [ReactiveDataStore<Repository>]
         }
         
         struct ViewModel {
@@ -40,38 +40,22 @@ struct RepositoryListModels {
                 
                 private let disposeBag = DisposeBag()
                 
-                init(_ repo: Repository) {
-                    self.identifier = repo.id
-                    self.state.accept(State(repo))
+                init(_ repositoryStore: ReactiveDataStore<Repository>) {
+                    
+                    repositoryStore
+                        .asObservable()
+                        .map({ State($0) })
+                        .bind(to: state)
+                        .disposed(by: disposeBag)
+                    
+                    self.identifier = repositoryStore.value.id
                 }
             }
             
             var repoCellViewModels: [CellViewModel]
             
-            init(_ repositries: [Repository]) {
+            init(_ repositries: [ReactiveDataStore<Repository>]) {
                 self.repoCellViewModels = repositries.map({ CellViewModel($0) })
-            }
-        }
-    }
-    
-    struct RepositoryCell {
-        
-        struct Request {
-            var repository: Repository
-        }
-        
-        struct Response {
-            var repository: Repository
-        }
-        
-        struct ViewModel {
-            
-            var id: Int
-            var state: RepositorySequence.ViewModel.CellViewModel.State
-            
-            init(_ repo: Repository) {
-                self.id = repo.id
-                self.state = .init(repo)
             }
         }
     }
@@ -83,11 +67,11 @@ struct RepositoryListModels {
         }
         
         struct Response {
-            var repoID: Int
+            
         }
         
         struct ViewModel {
-            var repoID: Int
+            
         }
     }
 }

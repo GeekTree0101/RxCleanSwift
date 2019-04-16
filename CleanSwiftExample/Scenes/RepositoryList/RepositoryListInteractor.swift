@@ -6,22 +6,34 @@ protocol RepositoryListInteractorLogic: class {
     
     var loadMoreRelay: PublishRelay<RepositoryListModels.RepositorySequence.Request> { get }
     var didTapRepositoryCell: PublishRelay<RepositoryListModels.RepositoryShow.Request> { get }
-    var updateRepository: PublishRelay<RepositoryListModels.RepositoryCell.Request> { get }
 }
 
-class RepositoryListInteractor: RepositoryListInteractorLogic  {
+protocol RepositoryListDataSotre: class {
+    
+    var repositoryStores: [ReactiveDataStore<Repository>] { get set }
+    var displayTargetIdentifier: Int? { get set }
+}
+
+class RepositoryListInteractor: RepositoryListInteractorLogic & RepositoryListDataSotre {
     
     public var loadMoreRelay: PublishRelay<RepositoryListModels.RepositorySequence.Request> = .init()
     public var didTapRepositoryCell: PublishRelay<RepositoryListModels.RepositoryShow.Request> = .init()
-    public var updateRepository: PublishRelay<RepositoryListModels.RepositoryCell.Request> = .init()
     
     public let worker = RepositoryListWorker(api: RepoAPI.init())
+    
+    public var repositoryStores: [ReactiveDataStore<Repository>] = []
+    public var displayTargetIdentifier: Int?
     
     func bind(to presenter: RepositoryListPresenterLogic) -> Disposable {
         
         let sharedLoadMore = loadMoreRelay
             .flatMap({ [unowned self] request in
                 return self.worker.loadRepositoryList(since: request.since)
+            })
+            .map({ [unowned self] repositories -> [ReactiveDataStore<Repository>] in
+                let repoStores = self.worker.convertToRepositoryDataStore(repositories)
+                self.repositoryStores += repoStores
+                return repoStores
             })
             .map({ RepositoryListModels.RepositorySequence.Response(repos: $0) })
             .share()
@@ -35,16 +47,14 @@ class RepositoryListInteractor: RepositoryListInteractorLogic  {
             .bind(to: presenter.presentLoadRelay)
         
         let repoShowDisposable = didTapRepositoryCell
-            .map({ .init(repoID: $0.repoID) })
+            .map({ [unowned self] request in
+                self.displayTargetIdentifier = request.repoID
+                return .init()
+            })
             .bind(to: presenter.presentRepositoryShow)
-        
-        let updateRepositoryDisposable = updateRepository
-            .map({ .init(repository: $0.repository) })
-            .bind(to: presenter.presentUpdateRepository)
         
         return Disposables.create([errorDisposable,
                                    loadDisposable,
-                                   repoShowDisposable,
-                                   updateRepositoryDisposable])
+                                   repoShowDisposable])
     }
 }

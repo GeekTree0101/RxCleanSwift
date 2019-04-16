@@ -57,10 +57,7 @@ class RepoShowContainerNode: ASDisplayNode {
     
     var disposeBag = DisposeBag()
     
-    private let repoID: Int
-    
-    init(id: Int) {
-        self.repoID = id
+    override init() {
         super.init()
         self.automaticallyManagesSubnodes = true
         self.automaticallyRelayoutOnSafeAreaChanges = true
@@ -105,14 +102,12 @@ class RepoShowContainerNode: ASDisplayNode {
     func bind(action: RepositoryShowInteractorLogic) {
         
         self.pinButtonNode.rx.tap
-            .withValue(type: Int.self, value: self.repoID)
-            .map({ .init(id: $0) })
+            .map({ .init() })
             .bind(to: action.didTapPin)
             .disposed(by: disposeBag)
         
         self.dismissButtonNode.rx.tap
-            .withValue(type: Int.self, value: self.repoID)
-            .map { .init(id: $0) }
+            .map { .init() }
             .bind(to: action.didTapDismissButton)
             .disposed(by: disposeBag)
     }

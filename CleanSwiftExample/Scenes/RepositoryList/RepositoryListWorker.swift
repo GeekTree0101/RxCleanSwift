@@ -17,4 +17,8 @@ class RepositoryListWorker {
             return repositries
         })
     }
+    
+    func convertToRepositoryDataStore(_ repositories: [Repository]) -> [ReactiveDataStore<Repository>] {
+        return repositories.map({ .init($0) })
+    }
 }

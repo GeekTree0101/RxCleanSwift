@@ -11,7 +11,7 @@ protocol RepositoryShowInteractorLogic: class {
 
 protocol RepositoryShowDataStore: class {
     
-    var repository: Repository? { get set }
+    var repositoryStore: ReactiveDataStore<Repository>? { get set }
 }
 
 class RepositoryShowInteractor: RepositoryShowInteractorLogic & RepositoryShowDataStore {
@@ -22,30 +22,33 @@ class RepositoryShowInteractor: RepositoryShowInteractorLogic & RepositoryShowDa
     
     public var worker = RepositoryShowWorker()
     
-    public var repository: Repository?
+    public var repositoryStore: ReactiveDataStore<Repository>?
     
     func bind(to presenter: RepositoryShowPresenterLogic) -> Disposable {
         
         let loadRepoDisposable = loadRepository
-            .flatMap({ [unowned self] request in
-                return self.worker.loadCachedRepository(request.id)
+            .flatMap({ [unowned self] _ -> Single<Repository> in
+                let id = self.repositoryStore?.value.id ?? -1
+                return self.worker.loadCachedRepository(id)
             })
-            .map({ RepositoryShowModels.Show.Response(repo: $0) })
+            .map({ RepositoryShowModels.Show.Response.init(repo: $0) })
             .bind(to: presenter.createRepositoryShowViewModel)
         
         let dismissDisposable = didTapDismissButton
-            .flatMap({ [unowned self] request in
-                return self.worker.loadCachedRepository(request.id)
+            .flatMap({ [unowned self] _ -> Single<Repository> in
+                let id = self.repositoryStore?.value.id ?? -1
+                return self.worker.loadCachedRepository(id)
             })
             .map({ [unowned self] repo in
-                self.repository = repo
+                self.repositoryStore?.update(repo)
                 return RepositoryShowModels.Dismiss.Response()
             })
             .bind(to: presenter.dismissRepositoryShow)
         
         let didTapPinDisposable = didTapPin
-            .flatMap({ [unowned self] request in
-                return self.worker.togglePin(request.id)
+            .flatMap({ [unowned self] request -> Single<Repository> in
+                let id = self.repositoryStore?.value.id ?? -1
+                return self.worker.togglePin(id)
             })
             .map({ RepositoryShowModels.Show.Response.init(repo: $0) })
             .bind(to: presenter.createRepositoryShowViewModel)

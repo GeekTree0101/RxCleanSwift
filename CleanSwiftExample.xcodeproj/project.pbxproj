@@ -40,6 +40,7 @@
 		9B5A87502265D3C300A24E88 /* RepositoryShowInteractorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A874F2265D3C300A24E88 /* RepositoryShowInteractorTests.swift */; };
 		9B5A87532265D68600A24E88 /* repository.json in Resources */ = {isa = PBXBuildFile; fileRef = 9B5A87522265D68600A24E88 /* repository.json */; };
 		9B5A87552265D6D400A24E88 /* ReadJSONFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A87542265D6D400A24E88 /* ReadJSONFile.swift */; };
+		9B5A87582266164400A24E88 /* ReactiveDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A87572266164400A24E88 /* ReactiveDataStore.swift */; };
 		A4C3494E27A6EAD0294F7556 /* Pods_CleanSwiftExample_CleanSwiftExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8752C6B05A212DF200D7D0A4 /* Pods_CleanSwiftExample_CleanSwiftExampleTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -93,6 +94,7 @@
 		9B5A874F2265D3C300A24E88 /* RepositoryShowInteractorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryShowInteractorTests.swift; sourceTree = "<group>"; };
 		9B5A87522265D68600A24E88 /* repository.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = repository.json; sourceTree = "<group>"; };
 		9B5A87542265D6D400A24E88 /* ReadJSONFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadJSONFile.swift; sourceTree = "<group>"; };
+		9B5A87572266164400A24E88 /* ReactiveDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactiveDataStore.swift; sourceTree = "<group>"; };
 		D0269B71F94FC8A870069417 /* Pods-CleanSwiftExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CleanSwiftExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CleanSwiftExample/Pods-CleanSwiftExample.debug.xcconfig"; sourceTree = "<group>"; };
 		D07884F9EC59008542BDA634 /* Pods-CleanSwiftExample-CleanSwiftExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CleanSwiftExample-CleanSwiftExampleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CleanSwiftExample-CleanSwiftExampleTests/Pods-CleanSwiftExample-CleanSwiftExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		E7E4311CD4531FB9FB223339 /* Pods_CleanSwiftExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CleanSwiftExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -150,6 +152,7 @@
 		9B0767BA226199FD0050FBFB /* CleanSwiftExample */ = {
 			isa = PBXGroup;
 			children = (
+				9B5A87562266162800A24E88 /* Utils */,
 				9B5A87322263606300A24E88 /* DataProvider */,
 				9B0767F02261A4370050FBFB /* Extensions */,
 				9B0767E822619E0E0050FBFB /* Nodes */,
@@ -297,6 +300,14 @@
 				9B5A87542265D6D400A24E88 /* ReadJSONFile.swift */,
 			);
 			path = res;
+			sourceTree = "<group>";
+		};
+		9B5A87562266162800A24E88 /* Utils */ = {
+			isa = PBXGroup;
+			children = (
+				9B5A87572266164400A24E88 /* ReactiveDataStore.swift */,
+			);
+			path = Utils;
 			sourceTree = "<group>";
 		};
 		F921DEDA2C3057FA8905419E /* Pods */ = {
@@ -565,6 +576,7 @@
 				9B5A8737226360C000A24E88 /* DataProvider.swift in Sources */,
 				9B5A870C2261AD1A00A24E88 /* NetworkService.swift in Sources */,
 				9B0767BE226199FD0050FBFB /* RepositoryListController.swift in Sources */,
+				9B5A87582266164400A24E88 /* ReactiveDataStore.swift in Sources */,
 				9B0767DB22619CA40050FBFB /* RepositoryListRouter.swift in Sources */,
 				9B5A87392265CD9300A24E88 /* Rx+Extension.swift in Sources */,
 				9B5A87252263535000A24E88 /* RepositoryShowInteractor.swift in Sources */,

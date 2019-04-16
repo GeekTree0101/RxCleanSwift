@@ -3,19 +3,32 @@ import RxCocoa
 
 protocol RepositoryListRouterLogic: class {
     
-    var presentToRepositoryShowRelay: PublishRelay<Int> { get }
+    var presentToRepositoryShowRelay: PublishRelay<Void> { get }
 }
 
-class RepositoryListRouter: RepositoryListRouterLogic {
+protocol RepositoryListDataPassing: class {
     
-    var presentToRepositoryShowRelay: PublishRelay<Int> = .init()
+    var dataStore: RepositoryListDataSotre? { get set }
+}
+
+class RepositoryListRouter: RepositoryListRouterLogic & RepositoryListDataPassing {
+    
+    var presentToRepositoryShowRelay: PublishRelay<Void> = .init()
+    
+    var dataStore: RepositoryListDataSotre?
     
     func bind(to viewController: RepositoryListController) -> Disposable {
         
         let presentToRepoShowDisposable =
             presentToRepositoryShowRelay
-                .subscribe(onNext: { [weak viewController] id in
-                    let vc = RepositoryShowController(id)
+                .subscribe(onNext: { [weak self, weak viewController] _ in
+                    guard let targetId = self?.dataStore?.displayTargetIdentifier,
+                        let repositoryStore = self?.dataStore?.repositoryStores
+                            .filter({ $0.value.id == targetId }).first else { return }
+                    
+                    let vc = RepositoryShowController()
+                    vc.router?.dataStore?.repositoryStore = repositoryStore
+                    
                     viewController?.present(vc,
                                             animated: true,
                                             completion: nil)

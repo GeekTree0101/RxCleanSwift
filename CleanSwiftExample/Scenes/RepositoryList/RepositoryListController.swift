@@ -7,19 +7,17 @@ protocol RepositoryListDisplayLogic: class {
     var displayErrorRelay: PublishRelay<Error?> { get }
     var displayItemsRelay: PublishRelay<RepositoryListModels.RepositorySequence.ViewModel> { get }
     var displayPresentToRepositoryShow: PublishRelay<RepositoryListModels.RepositoryShow.ViewModel> { get }
-    var displayUpdateRepositoryCellState: PublishRelay<RepositoryListModels.RepositoryCell.ViewModel> { get }
 }
 
 class RepositoryListController:
 ASViewController<RepositoryListContainerNode> & RepositoryListDisplayLogic {
     
     public var interactor: RepositoryListInteractorLogic?
-    public var router: RepositoryListRouterLogic?
+    public var router: (RepositoryListRouterLogic & RepositoryListDataPassing)?
     
     public var displayErrorRelay: PublishRelay<Error?> = .init()
     public var displayItemsRelay: PublishRelay<RepositoryListModels.RepositorySequence.ViewModel> = .init()
     public var displayPresentToRepositoryShow: PublishRelay<RepositoryListModels.RepositoryShow.ViewModel> = .init()
-    public var displayUpdateRepositoryCellState: PublishRelay<RepositoryListModels.RepositoryCell.ViewModel> = .init()
     
     private var batchContext: ASBatchContext?
     private var items: [RepositoryListModels.RepositorySequence.ViewModel.CellViewModel] = []
@@ -55,6 +53,7 @@ ASViewController<RepositoryListContainerNode> & RepositoryListDisplayLogic {
             .bind(to: viewController)
             .disposed(by: disposeBag)
         
+        router.dataStore = interactor
         viewController.router = router
         viewController.interactor = interactor
     }
@@ -86,17 +85,9 @@ ASViewController<RepositoryListContainerNode> & RepositoryListDisplayLogic {
             })
             .disposed(by: disposeBag)
         
-        self.displayPresentToRepositoryShow.map({ $0.repoID })
-            .subscribe(onNext: { [weak self] id in
-                self?.router?.presentToRepositoryShowRelay.accept(id)
-            })
-            .disposed(by: disposeBag)
-        
-        self.displayUpdateRepositoryCellState
-            .subscribe(onNext: { [weak self] viewModel in
-                guard let cellViewModel =
-                    self?.items.filter({ $0.identifier == viewModel.id }).first else { return }
-                cellViewModel.state.accept(viewModel.state)
+        self.displayPresentToRepositoryShow
+            .subscribe(onNext: { [weak self] _ in
+                self?.router?.presentToRepositoryShowRelay.accept(())
             })
             .disposed(by: disposeBag)
     }

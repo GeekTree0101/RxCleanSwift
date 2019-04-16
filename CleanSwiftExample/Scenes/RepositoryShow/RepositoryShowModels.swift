@@ -6,7 +6,7 @@ struct RepositoryShowModels {
     struct Show {
         
         struct Request {
-            var id: Int
+            
         }
         
         struct Response {
@@ -32,7 +32,7 @@ struct RepositoryShowModels {
     struct Dismiss {
         
         struct Request {
-            var id: Int
+            
         }
         
         struct Response {
