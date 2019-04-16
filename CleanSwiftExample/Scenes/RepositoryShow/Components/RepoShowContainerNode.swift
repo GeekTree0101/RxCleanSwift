@@ -105,13 +105,13 @@ class RepoShowContainerNode: ASDisplayNode {
     func bind(action: RepositoryShowInteractorLogic) {
         
         self.pinButtonNode.rx.tap
-            .withLatestFrom(Observable.just(self.repoID))
+            .withValue(type: Int.self, value: self.repoID)
             .map({ .init(id: $0) })
             .bind(to: action.didTapPin)
             .disposed(by: disposeBag)
         
         self.dismissButtonNode.rx.tap
-            .withLatestFrom(Observable.just(self.repoID))
+            .withValue(type: Int.self, value: self.repoID)
             .map { .init(id: $0) }
             .bind(to: action.didTapDismissButton)
             .disposed(by: disposeBag)

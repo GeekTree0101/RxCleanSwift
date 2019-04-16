@@ -127,7 +127,7 @@ extension RepositoryListController: ASTableDataSource {
             if let interactor = self.interactor {
                 
                 cellNode.profileNode.rx.tap
-                    .withLatestFrom(Observable.just(viewModel.identifier))
+                    .withValue(type: Int.self, value: viewModel.identifier)
                     .map({ .init(repoID: $0) })
                     .bind(to: interactor.didTapRepositoryCell)
                     .disposed(by: cellNode.disposeBag)

@@ -15,7 +15,7 @@ class RepositoryShowInteractor: RepositoryShowInteractorLogic  {
     public var didTapDismissButton: PublishRelay<RepositoryShowModels.Dismiss.Request> = .init()
     public var didTapPin: PublishRelay<RepositoryShowModels.Show.Request> = .init()
     
-    private let worker = RepositoryShowWorker()
+    public let worker = RepositoryShowWorker()
     
     func bind(to presenter: RepositoryShowPresenterLogic) -> Disposable {
         

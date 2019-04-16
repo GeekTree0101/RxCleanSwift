@@ -36,6 +36,7 @@
 		9B5A872B2263536E00A24E88 /* RepositoryShowRouter.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A872A2263536D00A24E88 /* RepositoryShowRouter.swift */; };
 		9B5A87352263607900A24E88 /* CleanSwiftExample.xcdatamodeld in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A87332263607900A24E88 /* CleanSwiftExample.xcdatamodeld */; };
 		9B5A8737226360C000A24E88 /* DataProvider.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A8736226360C000A24E88 /* DataProvider.swift */; };
+		9B5A87392265CD9300A24E88 /* Rx+Extension.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A87382265CD9300A24E88 /* Rx+Extension.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -70,6 +71,7 @@
 		9B5A872A2263536D00A24E88 /* RepositoryShowRouter.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryShowRouter.swift; sourceTree = "<group>"; };
 		9B5A87342263607900A24E88 /* CleanSwiftExample.xcdatamodel */ = {isa = PBXFileReference; lastKnownFileType = wrapper.xcdatamodel; path = CleanSwiftExample.xcdatamodel; sourceTree = "<group>"; };
 		9B5A8736226360C000A24E88 /* DataProvider.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DataProvider.swift; sourceTree = "<group>"; };
+		9B5A87382265CD9300A24E88 /* Rx+Extension.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "Rx+Extension.swift"; sourceTree = "<group>"; };
 		D0269B71F94FC8A870069417 /* Pods-CleanSwiftExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CleanSwiftExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CleanSwiftExample/Pods-CleanSwiftExample.debug.xcconfig"; sourceTree = "<group>"; };
 		E7E4311CD4531FB9FB223339 /* Pods_CleanSwiftExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CleanSwiftExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
@@ -183,6 +185,7 @@
 			isa = PBXGroup;
 			children = (
 				9B0767F12261A4420050FBFB /* ASTextNode+Extension.swift */,
+				9B5A87382265CD9300A24E88 /* Rx+Extension.swift */,
 			);
 			path = Extensions;
 			sourceTree = "<group>";
@@ -387,6 +390,7 @@
 				9B5A870C2261AD1A00A24E88 /* NetworkService.swift in Sources */,
 				9B0767BE226199FD0050FBFB /* RepositoryListController.swift in Sources */,
 				9B0767DB22619CA40050FBFB /* RepositoryListRouter.swift in Sources */,
+				9B5A87392265CD9300A24E88 /* Rx+Extension.swift in Sources */,
 				9B5A87252263535000A24E88 /* RepositoryShowInteractor.swift in Sources */,
 				9B0767E722619DD80050FBFB /* RepoAPI.swift in Sources */,
 				9B5A87272263535B00A24E88 /* RepositoryShowModels.swift in Sources */,
