@@ -24,20 +24,22 @@ class RepositoryShowInteractor: RepositoryShowInteractorLogic & RepositoryShowDa
     
     public var repositoryStore: ReactiveDataStore<Repository>?
     
+    private var repositoryIdentifier: Int {
+        return self.repositoryStore?.value.id ?? -1
+    }
+    
     func bind(to presenter: RepositoryShowPresenterLogic) -> Disposable {
         
         let loadRepoDisposable = loadRepository
             .flatMap({ [unowned self] _ -> Single<Repository> in
-                let id = self.repositoryStore?.value.id ?? -1
-                return self.worker.loadCachedRepository(id)
+                return self.worker.loadCachedRepository(self.repositoryIdentifier)
             })
             .map({ RepositoryShowModels.Show.Response.init(repo: $0) })
             .bind(to: presenter.createRepositoryShowViewModel)
         
         let dismissDisposable = didTapDismissButton
             .flatMap({ [unowned self] _ -> Single<Repository> in
-                let id = self.repositoryStore?.value.id ?? -1
-                return self.worker.loadCachedRepository(id)
+                return self.worker.loadCachedRepository(self.repositoryIdentifier)
             })
             .map({ [unowned self] repo in
                 self.repositoryStore?.update(repo)
@@ -46,9 +48,8 @@ class RepositoryShowInteractor: RepositoryShowInteractorLogic & RepositoryShowDa
             .bind(to: presenter.dismissRepositoryShow)
         
         let didTapPinDisposable = didTapPin
-            .flatMap({ [unowned self] request -> Single<Repository> in
-                let id = self.repositoryStore?.value.id ?? -1
-                return self.worker.togglePin(id)
+            .flatMap({ [unowned self] _ -> Single<Repository> in
+                return self.worker.togglePin(self.repositoryIdentifier)
             })
             .map({ RepositoryShowModels.Show.Response.init(repo: $0) })
             .bind(to: presenter.createRepositoryShowViewModel)
