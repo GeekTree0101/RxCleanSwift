@@ -11,7 +11,7 @@ protocol RepositoryShowDisplayLogic: class {
 class RepositoryShowController: ASViewController<RepoShowContainerNode> & RepositoryShowDisplayLogic {
     
     var interactor: RepositoryShowInteractorLogic?
-    var router: RepositoryShowRouterLogic?
+    var router: (RepositoryShowRouterLogic & RepositoryShowDataPassing)?
     
     var displayRepositoryShowState: PublishRelay<RepositoryShowModels.Show.ViewModel> = .init()
     var displayDissmiss: PublishRelay<RepositoryShowModels.Dismiss.ViewModel> = .init()
@@ -37,9 +37,10 @@ class RepositoryShowController: ASViewController<RepoShowContainerNode> & Reposi
         presenter.bind(to: viewController).disposed(by: disposeBag)
         router.bind(to: viewController).disposed(by: disposeBag)
         
+        router.dataStore = interactor
         viewController.interactor = interactor
         viewController.router = router
-        
+    
         // Binding VIP
         
         self.node.bind(state: self.displayRepositoryShowState.asObservable())

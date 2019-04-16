@@ -22,6 +22,10 @@ PODS:
   - RxAlamofire/Core (4.4.1):
     - Alamofire (~> 4.8)
     - RxSwift (~> 4.5)
+  - RxAtomic (4.4.2)
+  - RxBlocking (4.4.2):
+    - RxAtomic (>= 4.4.2, ~> 4.4)
+    - RxSwift (>= 4.4.2, ~> 4.4)
   - RxCocoa (4.5.0):
     - RxSwift (>= 4.4.2, ~> 4.4)
   - RxCocoa-Texture (2.3.0):
@@ -32,6 +36,9 @@ PODS:
     - RxCocoa (~> 4.0)
     - RxSwift (~> 4.0)
   - RxSwift (4.5.0)
+  - RxTest (4.4.2):
+    - RxAtomic (>= 4.4.2, ~> 4.4)
+    - RxSwift (>= 4.4.2, ~> 4.4)
   - Texture (2.8):
     - Texture/AssetsLibrary (= 2.8)
     - Texture/Core (= 2.8)
@@ -57,10 +64,12 @@ DEPENDENCIES:
   - BonMot
   - Codextended
   - RxAlamofire
+  - RxBlocking (~> 4.4.0)
   - RxCocoa
   - RxCocoa-Texture
   - RxOptional
   - RxSwift
+  - RxTest (~> 4.4.0)
   - Texture
 
 SPEC REPOS:
@@ -72,10 +81,13 @@ SPEC REPOS:
     - PINOperation
     - PINRemoteImage
     - RxAlamofire
+    - RxAtomic
+    - RxBlocking
     - RxCocoa
     - RxCocoa-Texture
     - RxOptional
     - RxSwift
+    - RxTest
     - Texture
 
 SPEC CHECKSUMS:
@@ -86,12 +98,15 @@ SPEC CHECKSUMS:
   PINOperation: a6219e6fc9db9c269eb7a7b871ac193bcf400aac
   PINRemoteImage: d6d51c5d2adda55f1ce30c96e850b6c4ebd2856a
   RxAlamofire: ed65f451f5a9a59419b0b9e705043dc01410edd9
+  RxAtomic: d00e97c10db88c6f08540e0bf2752fc5a2404167
+  RxBlocking: e96fdda1473d81332a6ed2cface935dc2167a122
   RxCocoa: cbf70265dc65a981d4ac982e513c10cf23df24a0
   RxCocoa-Texture: e93fe1e32772d3f744069aeea16abe38f94ec8b2
   RxOptional: 80426a0ddbd092573e4c482d8cc13302078c4d5e
   RxSwift: f172070dfd1a93d70a9ab97a5a01166206e1c575
+  RxTest: 6433d5b6229f5de424fa534bc22b5e6c38b0b671
   Texture: fc6e0157201f3a6e503d364c147b1872e365cef4
 
-PODFILE CHECKSUM: a5916731862c9ebdcc2d88f815e4e52700945473
+PODFILE CHECKSUM: 416967ceac2fefae454a2a29e389a6f7a6c46655
 
 COCOAPODS: 1.5.3

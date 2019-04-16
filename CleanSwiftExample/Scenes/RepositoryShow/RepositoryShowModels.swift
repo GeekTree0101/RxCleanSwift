@@ -36,11 +36,11 @@ struct RepositoryShowModels {
         }
         
         struct Response {
-            var repo: Repository
+            
         }
         
         struct ViewModel {
-            var repo: Repository
+            
         }
     }
 }

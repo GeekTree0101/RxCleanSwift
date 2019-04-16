@@ -9,13 +9,20 @@ protocol RepositoryShowInteractorLogic: class {
     var didTapPin: PublishRelay<RepositoryShowModels.Show.Request> { get }
 }
 
-class RepositoryShowInteractor: RepositoryShowInteractorLogic  {
+protocol RepositoryShowDataStore: class {
+    
+    var repository: Repository? { get set }
+}
+
+class RepositoryShowInteractor: RepositoryShowInteractorLogic & RepositoryShowDataStore {
     
     public var loadRepository: PublishRelay<RepositoryShowModels.Show.Request> = .init()
     public var didTapDismissButton: PublishRelay<RepositoryShowModels.Dismiss.Request> = .init()
     public var didTapPin: PublishRelay<RepositoryShowModels.Show.Request> = .init()
     
-    public let worker = RepositoryShowWorker()
+    public var worker = RepositoryShowWorker()
+    
+    public var repository: Repository?
     
     func bind(to presenter: RepositoryShowPresenterLogic) -> Disposable {
         
@@ -30,14 +37,17 @@ class RepositoryShowInteractor: RepositoryShowInteractorLogic  {
             .flatMap({ [unowned self] request in
                 return self.worker.loadCachedRepository(request.id)
             })
-            .map({ RepositoryShowModels.Dismiss.Response(repo: $0) })
+            .map({ [unowned self] repo in
+                self.repository = repo
+                return RepositoryShowModels.Dismiss.Response()
+            })
             .bind(to: presenter.dismissRepositoryShow)
         
         let didTapPinDisposable = didTapPin
             .flatMap({ [unowned self] request in
                 return self.worker.togglePin(request.id)
             })
-            .map({ RepositoryShowModels.Show.Response(repo: $0) })
+            .map({ RepositoryShowModels.Show.Response.init(repo: $0) })
             .bind(to: presenter.createRepositoryShowViewModel)
         
         return Disposables.create([loadRepoDisposable,
