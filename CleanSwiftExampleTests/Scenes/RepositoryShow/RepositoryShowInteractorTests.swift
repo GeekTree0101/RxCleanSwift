@@ -25,30 +25,55 @@ class RepositoryShowInteractorTests: XCTestCase {
         return ReadJSONFile.shared.load("repository.json", type: Repository.self, from: RepositoryShowInteractorTests.self)!
     }
 
-    // TODO using test scheduler
-//    func testLoadRepository() {
-//        let spyPresent = RepositoryShowPresenterSpy.init()
-//        interactor.bind(to: spyPresent).disposed(by: disposeBag)
-//
-//        interactor.loadRepository.accept(RepositoryShowModels.Show.Request.init(id: 100))
-//        let response = try! spyPresent.createRepositoryShowViewModel.toBlocking().first()
-//
-//        XCTAssertEqual(response?.repo.id ?? -1, 130)
-//    }
-//
-//    func testDismiss() {
-//        let spyPresent = RepositoryShowPresenterSpy.init()
-//        interactor.bind(to: spyPresent).disposed(by: disposeBag)
-//
-//        interactor.didTapDismissButton.accept(.init(id: 200))
-//        let response = try! spyPresent.dismissRepositoryShow.toBlocking().first()
-//
-//        XCTAssert(response != nil)
-//        XCTAssertEqual(interactor.repository?.id ?? -1, 200)
-//    }
+    func testLoadRepository() {
+        let spyPresent = RepositoryShowPresenterSpy.init()
+        interactor.bind(to: spyPresent).disposed(by: disposeBag)
+
+        let scheduler = TestScheduler.init(initialClock: 0)
+        let inputObserver = scheduler.createHotObservable([.next(100, 34), .next(200, 11), .next(300, 30)])
+        let outputObserver: TestableObserver<Int> = scheduler.createObserver(Int.self)
+        
+        inputObserver
+            .map { RepositoryShowModels.Show.Request.init(id: $0) }
+            .bind(to: interactor.didTapPin)
+            .disposed(by: disposeBag)
+        
+        spyPresent.createRepositoryShowViewModel
+            .map({ $0.repo.id })
+            .subscribe(outputObserver)
+            .disposed(by: disposeBag)
+        
+        scheduler.start()
+        
+        XCTAssertEqual(outputObserver.events, [.next(100, 34), .next(200, 11), .next(300, 30)])
+    }
+
+    func testDismiss() {
+        let spyPresent = RepositoryShowPresenterSpy.init()
+        interactor.bind(to: spyPresent).disposed(by: disposeBag)
+        
+        let scheduler = TestScheduler.init(initialClock: 0)
+        
+        let inputObserver = scheduler.createHotObservable([.next(100, 34), .next(200, 11), .next(300, 30)])
+        let outputObserver: TestableObserver<RepositoryShowModels.Dismiss.Response> =
+            scheduler.createObserver(RepositoryShowModels.Dismiss.Response.self)
+
+        inputObserver
+            .map { RepositoryShowModels.Dismiss.Request.init(id: $0) }
+            .bind(to: interactor.didTapDismissButton)
+            .disposed(by: disposeBag)
+        
+        spyPresent.dismissRepositoryShow
+            .subscribe(outputObserver)
+            .disposed(by: disposeBag)
+        
+        scheduler.start()
+        
+        XCTAssertEqual(outputObserver.events.count, 3)
+        XCTAssertEqual(interactor.repository?.id ?? -1, 30)
+    }
     
     func testTapPin() {
-        // NOTE: using test scheduler
         let spyPresent = RepositoryShowPresenterSpy.init()
         interactor.bind(to: spyPresent).disposed(by: disposeBag)
         
