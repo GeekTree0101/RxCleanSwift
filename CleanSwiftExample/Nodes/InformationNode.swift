@@ -33,6 +33,7 @@ final class InformationNode: ASDisplayNode {
                               .color(UIColor.darkGray)])
         
         static let contentSpacing: CGFloat = 5.0
+        static let subTitleMaxiumNumberOfLines: UInt = 2
     }
     
     lazy var titleNode: ASTextNode = {
@@ -53,9 +54,11 @@ final class InformationNode: ASDisplayNode {
         
         switch align {
         case .start:
-            node.maximumNumberOfLines = 2
+            node.maximumNumberOfLines = Const.subTitleMaxiumNumberOfLines
             node.truncationAttributedText =
                 "... More See".styled(with: Const.moreSeeAttr)
+            node.delegate = self
+            node.isUserInteractionEnabled = true
         case .center:
             node.maximumNumberOfLines = 0
             node.truncationMode = .byTruncatingMiddle
@@ -92,3 +95,10 @@ final class InformationNode: ASDisplayNode {
     }
 }
 
+extension InformationNode: ASTextNodeDelegate {
+    
+    func textNodeTappedTruncationToken(_ textNode: ASTextNode!) {
+        self.subTitleNode.maximumNumberOfLines = 0
+        self.setNeedsLayout()
+    }
+}

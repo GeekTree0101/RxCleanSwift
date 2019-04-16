@@ -12,7 +12,9 @@ class RepositoryShowRouter: RepositoryShowRouterLogic {
     
     func bind(to viewController: RepositoryShowController) -> Disposable {
         
-        let disposeable = dismiss.subscribe(onNext: { [weak viewController] _ in
+        let disposeable = dismiss.subscribe(onNext: { [weak viewController] viewModel in
+            let presentingViewController = viewController?.presentingViewController as? RepositoryListController
+            presentingViewController?.interactor?.updateRepository.accept(.init(repository: viewModel.repo))
             viewController?.dismiss(animated: true, completion: nil)
         })
         

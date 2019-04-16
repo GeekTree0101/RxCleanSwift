@@ -1,7 +1,6 @@
 import AsyncDisplayKit
 import RxSwift
 import RxCocoa
-import ReactorKit
 
 protocol RepositoryShowDisplayLogic: class {
     

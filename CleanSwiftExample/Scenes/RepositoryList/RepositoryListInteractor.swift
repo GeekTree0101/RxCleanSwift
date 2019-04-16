@@ -6,12 +6,14 @@ protocol RepositoryListInteractorLogic: class {
     
     var loadMoreRelay: PublishRelay<RepositoryListModels.RepositorySequence.Request> { get }
     var didTapRepositoryCell: PublishRelay<RepositoryListModels.RepositoryShow.Request> { get }
+    var updateRepository: PublishRelay<RepositoryListModels.RepositoryCell.Request> { get }
 }
 
 class RepositoryListInteractor: RepositoryListInteractorLogic  {
     
     public var loadMoreRelay: PublishRelay<RepositoryListModels.RepositorySequence.Request> = .init()
     public var didTapRepositoryCell: PublishRelay<RepositoryListModels.RepositoryShow.Request> = .init()
+    public var updateRepository: PublishRelay<RepositoryListModels.RepositoryCell.Request> = .init()
     
     private let worker = RepositoryListWorker(api: RepoAPI.init())
     
@@ -57,8 +59,14 @@ class RepositoryListInteractor: RepositoryListInteractorLogic  {
                 .map({ RepositoryListModels.RepositoryShow.Response(repoID: $0.repoID) })
                 .bind(to: presenter.presentRepositoryShow)
         
+        let updateRepositoryDisposable =
+            updateRepository
+                .map({ .init(repository: $0.repository) })
+                .bind(to: presenter.updateRepository)
+        
         return Disposables.create([errorDisposable,
                                    loadDisposable,
-                                   repoShowDisposable])
+                                   repoShowDisposable,
+                                   updateRepositoryDisposable])
     }
 }

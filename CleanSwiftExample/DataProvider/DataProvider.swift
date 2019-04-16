@@ -50,21 +50,6 @@ class DataProvider {
         })
     }
     
-    public func observe<T: Codable>(_ scope: Scope, type: T.Type) -> Observable<T> {
-        
-        return updateDataRelay
-            .filter({ scope.identifier == $0 })
-            .map({ [weak self] _ -> T? in
-                if let object = self?.load(scope, type: type) {
-                    return object
-                } else {
-                    return nil
-                }
-            })
-            .filterNil()
-            .delay(0.5, scheduler: MainScheduler.instance)
-    }
-    
     @discardableResult
     public func save<T: Codable>(_ scope: Scope, model: T) -> Bool {
         guard let viewContext = self.viewContext,

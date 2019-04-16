@@ -48,14 +48,10 @@ struct RepositoryListModels {
                 init(_ repo: Repository) {
                     self.identifier = repo.id
                     self.state.accept(State(repo))
-                    
-                    let observe = DataProvider.shared
-                        .observe(.repository(repo.id),
-                                 type: Repository.self)
-                    
-                    observe.map({ State($0) })
-                        .bind(to: state)
-                        .disposed(by: disposeBag)
+                }
+                
+                func updateState(_ repo: Repository) {
+                    self.state.accept(State(repo))
                 }
             }
             
@@ -63,6 +59,28 @@ struct RepositoryListModels {
             
             init(_ repositries: [Repository]) {
                 self.repoCellViewModels = repositries.map({ CellViewModel($0) })
+            }
+        }
+    }
+    
+    struct RepositoryCell {
+        
+        struct Request {
+            var repository: Repository
+        }
+        
+        struct Response {
+            var repository: Repository
+        }
+        
+        struct ViewModel {
+            
+            var id: Int
+            var state: RepositorySequence.ViewModel.CellViewModel.State
+            
+            init(_ repo: Repository) {
+                self.id = repo.id
+                self.state = .init(repo)
             }
         }
     }
