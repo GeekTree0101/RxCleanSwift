@@ -1,10 +1,10 @@
 import Foundation
 import AsyncDisplayKit
 import RxSwift
-import ReactorKit
 
-class RepositoryListCellNode: ASCellNode & View {
+class RepositoryListCellNode: ASCellNode {
     
+    typealias ViewModel = RepositoryListModels.RepositorySequence.ViewModel.CellViewModel
     struct Const {
         static let cellInsets: UIEdgeInsets =
             .init(top: 15.0, left: 15.0, bottom: 15.0, right: 15.0)
@@ -16,36 +16,40 @@ class RepositoryListCellNode: ASCellNode & View {
     
     var disposeBag = DisposeBag()
     
-    init(_ reactor: RepoReactor) {
-        defer { self.reactor = reactor }
+    override init() {
         super.init()
         self.automaticallyManagesSubnodes = true
         self.selectionStyle = .none
     }
     
-    func bind(reactor: RepoReactor) {
+    func bind(viewModel: ViewModel) {
         
-        reactor.state.map({ $0.profileURL })
+        viewModel.state.map({ $0?.profileURL })
             .distinctUntilChanged()
             .bind(to: profileNode.rx.url)
             .disposed(by: disposeBag)
         
-        reactor.state.map({ $0.title })
+        viewModel.state.map({ $0?.title })
             .distinctUntilChanged()
             .bind(to: self.infoNode.rx.title,
                   setNeedsLayout: infoNode)
             .disposed(by: disposeBag)
         
-        reactor.state.map({ $0.desc })
+        viewModel.state.map({ $0?.desc })
             .distinctUntilChanged()
             .bind(to: self.infoNode.rx.subTitle,
                   setNeedsLayout: infoNode)
             .disposed(by: disposeBag)
         
-        reactor.state.map({ $0.isPinned })
+        viewModel.state.map({ $0?.isPinned ?? false })
             .distinctUntilChanged()
             .bind(to: self.profileNode.rx.isPinned,
                   setNeedsLayout: self.profileNode)
+            .disposed(by: disposeBag)
+        
+        profileNode.rx.tap
+            .map { _ in return .didTapProfile }
+            .bind(to: viewModel.action)
             .disposed(by: disposeBag)
     }
 }

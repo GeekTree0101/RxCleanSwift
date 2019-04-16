@@ -19,7 +19,7 @@ class RepositoryShowPresenter: RepositoryShowPresenterLogic {
             .bind(to: viewController.displayRepositoryShowState)
         
         let dismissDisposable = dismissRepositoryShow
-            .map({ _ in  return RepositoryShowModels.Dismiss.ViewModel() })
+            .map({ RepositoryShowModels.Dismiss.ViewModel(repo: $0.repo) })
             .bind(to: viewController.displayDissmiss)
         
         

@@ -19,7 +19,7 @@ class RepositoryListPresenter: RepositoryListPresenterLogic {
         
         let loadDisposable =
             loadRelay
-                .map({ .init(repoReactors: $0.repos.map({ RepoReactor($0) })) })
+                .map({ RepositoryListModels.RepositorySequence.ViewModel.init($0.repos) })
                 .bind(to: viewController.displayItemsRelay)
         
         let errorDisposable =

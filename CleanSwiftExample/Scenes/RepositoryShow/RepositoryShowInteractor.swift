@@ -27,7 +27,10 @@ class RepositoryShowInteractor: RepositoryShowInteractorLogic  {
             .bind(to: presenter.createRepositoryShowViewModel)
         
         let dismissDisposable = didTapDismissButton
-            .map({ _ in return RepositoryShowModels.Dismiss.Response() })
+            .flatMap({ [unowned self] request in
+                return self.worker.loadCachedRepository(request.id)
+            })
+            .map({ RepositoryShowModels.Dismiss.Response(repo: $0) })
             .bind(to: presenter.dismissRepositoryShow)
         
         let didTapPinDisposable = didTapPin

@@ -10,6 +10,5 @@ target 'CleanSwiftExample' do
   pod 'BonMot'
   pod 'Codextended'
   pod 'RxAlamofire'
-  pod 'ReactorKit'
 end
 

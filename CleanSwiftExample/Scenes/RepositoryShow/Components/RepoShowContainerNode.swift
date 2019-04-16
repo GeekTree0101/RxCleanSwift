@@ -111,7 +111,8 @@ class RepoShowContainerNode: ASDisplayNode {
             .disposed(by: disposeBag)
         
         self.dismissButtonNode.rx.tap
-            .map { .init() }
+            .withLatestFrom(Observable.just(self.repoID))
+            .map { .init(id: $0) }
             .bind(to: action.didTapDismissButton)
             .disposed(by: disposeBag)
     }

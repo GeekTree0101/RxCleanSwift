@@ -32,15 +32,15 @@ struct RepositoryShowModels {
     struct Dismiss {
         
         struct Request {
-            
+            var id: Int
         }
         
         struct Response {
-            
+            var repo: Repository
         }
         
         struct ViewModel {
-            
+            var repo: Repository
         }
     }
 }

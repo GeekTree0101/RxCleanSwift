@@ -47,7 +47,6 @@ class RepositoryShowController: ASViewController<RepoShowContainerNode> & Reposi
         self.node.bind(action: interactor)
         
         self.displayDissmiss
-            .map({ _ in return })
             .bind(to: router.dismiss)
             .disposed(by: disposeBag)
     }

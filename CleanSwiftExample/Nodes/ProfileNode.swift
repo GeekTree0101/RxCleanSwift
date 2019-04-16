@@ -14,6 +14,10 @@ extension Reactive where Base: ProfileNode {
     var url: ASBinder<URL?> {
         return base.imageNode.rx.url
     }
+    
+    var tap: Observable<Void> {
+        return base.imageNode.rx.tap
+    }
 }
 
 final class ProfileNode: ASDisplayNode {

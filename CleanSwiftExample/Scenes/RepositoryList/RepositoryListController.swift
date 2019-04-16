@@ -20,7 +20,7 @@ ASViewController<RepositoryListContainerNode> & RepositoryListDisplayLogic {
     var displayPresentToRepositoryShow: PublishRelay<RepositoryListModels.RepositoryShow.ViewModel> = .init()
     
     private var batchContext: ASBatchContext?
-    private var items: [RepoReactor] = []
+    private var items: [RepositoryListModels.RepositorySequence.ViewModel.CellViewModel] = []
     private var since: Int? {
         return self.items.count == 0 ? nil: self.items.count
     }
@@ -64,8 +64,8 @@ ASViewController<RepositoryListContainerNode> & RepositoryListDisplayLogic {
                 guard let self = self else { return }
                 
                 let startIndex = self.items.count
-                self.items.append(contentsOf: viewModel.repoReactors)
-                let indexPaths: [IndexPath] = (startIndex..<startIndex + viewModel.repoReactors.count)
+                self.items.append(contentsOf: viewModel.repoCellViewModels)
+                let indexPaths: [IndexPath] = (startIndex..<startIndex + viewModel.repoCellViewModels.count)
                     .map({ index in
                         return IndexPath.init(row: index, section: 0)
                     })
@@ -109,18 +109,27 @@ extension RepositoryListController: ASTableDataSource {
     func tableNode(_ tableNode: ASTableNode, nodeBlockForRowAt indexPath: IndexPath) -> ASCellNodeBlock {
         return {
             guard self.items.count > indexPath.row else { return ASCellNode() }
-            return RepositoryListCellNode(self.items[indexPath.row])
+            let cellNode = RepositoryListCellNode()
+            let viewModel = self.items[indexPath.row]
+            
+            cellNode.bind(viewModel: viewModel)
+            
+            if let interactor = self.interactor {
+                
+                viewModel.action
+                    .filter({ $0 == .didTapProfile })
+                    .withLatestFrom(Observable.just(viewModel.identifier))
+                    .map({ .init(repoID: $0) })
+                    .bind(to: interactor.didTapRepositoryCell)
+                    .disposed(by: cellNode.disposeBag)
+            }
+            
+            return cellNode
         }
     }
 }
 
 extension RepositoryListController: ASTableDelegate {
-    
-    func tableNode(_ tableNode: ASTableNode, didSelectRowAt indexPath: IndexPath) {
-        guard self.items.count > indexPath.row else { return }
-        let repoID: Int = self.items[indexPath.row].id
-        self.interactor?.didTapRepositoryCell.accept(.init(repoID: repoID))
-    }
     
     func shouldBatchFetch(for tableNode: ASTableNode) -> Bool {
         return self.batchContext == nil || !(self.batchContext?.isFetching() ?? true)
@@ -128,7 +137,6 @@ extension RepositoryListController: ASTableDelegate {
     
     func tableNode(_ tableNode: ASTableNode,
                    willBeginBatchFetchWith context: ASBatchContext) {
-        
         self.interactor?.loadMoreRelay.accept(RepositoryListModels.RepositorySequence.Request(since: self.since))
         self.batchContext = context
     }

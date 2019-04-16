@@ -3,12 +3,12 @@ import RxCocoa
 
 protocol RepositoryShowRouterLogic: class {
     
-    var dismiss: PublishRelay<Void> { get }
+    var dismiss: PublishRelay<RepositoryShowModels.Dismiss.ViewModel> { get }
 }
 
 class RepositoryShowRouter: RepositoryShowRouterLogic {
     
-    var dismiss: PublishRelay<Void> = .init()
+    var dismiss: PublishRelay<RepositoryShowModels.Dismiss.ViewModel> = .init()
     
     func bind(to viewController: RepositoryShowController) -> Disposable {
         
