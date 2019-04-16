@@ -22,7 +22,7 @@ class RepositoryListInteractor: RepositoryListInteractorLogic  {
         let sharedLoadMore =
             loadMoreRelay
                 .flatMap({ [unowned self] request in
-                    return self.worker.load(since: request.since)
+                    return self.worker.loadRepositoryList(since: request.since)
                 })
                 .map({ RepositoryListModels.RepositorySequence.Response(repos: $0) })
                 .share()
@@ -39,7 +39,7 @@ class RepositoryListInteractor: RepositoryListInteractorLogic  {
                     }
                 }
                 .filterNil()
-                .bind(to: presenter.errorRelay)
+                .bind(to: presenter.presentErrorRelay)
         
         let loadDisposable = sharedLoadMore
             .materialize()
@@ -52,7 +52,7 @@ class RepositoryListInteractor: RepositoryListInteractorLogic  {
                 }
             }
             .filterNil()
-            .bind(to: presenter.loadRelay)
+            .bind(to: presenter.presentLoadRelay)
         
         let repoShowDisposable =
             didTapRepositoryCell
@@ -62,7 +62,7 @@ class RepositoryListInteractor: RepositoryListInteractorLogic  {
         let updateRepositoryDisposable =
             updateRepository
                 .map({ .init(repository: $0.repository) })
-                .bind(to: presenter.updateRepository)
+                .bind(to: presenter.presentUpdateRepository)
         
         return Disposables.create([errorDisposable,
                                    loadDisposable,

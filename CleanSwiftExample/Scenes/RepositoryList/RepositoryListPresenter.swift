@@ -3,29 +3,28 @@ import RxCocoa
 
 protocol RepositoryListPresenterLogic: class {
     
-    var loadRelay: PublishRelay<RepositoryListModels.RepositorySequence.Response> { get }
-    var errorRelay: PublishRelay<Error?> { get }
+    var presentLoadRelay: PublishRelay<RepositoryListModels.RepositorySequence.Response> { get }
+    var presentErrorRelay: PublishRelay<Error?> { get }
     var presentRepositoryShow: PublishRelay<RepositoryListModels.RepositoryShow.Response> { get }
-    var updateRepository: PublishRelay<RepositoryListModels.RepositoryCell.Response> { get }
+    var presentUpdateRepository: PublishRelay<RepositoryListModels.RepositoryCell.Response> { get }
 }
 
 class RepositoryListPresenter: RepositoryListPresenterLogic {
     
-    public var loadRelay: PublishRelay<RepositoryListModels.RepositorySequence.Response> = .init()
+    public var presentLoadRelay: PublishRelay<RepositoryListModels.RepositorySequence.Response> = .init()
+    public var presentErrorRelay: PublishRelay<Error?> = .init()
     public var presentRepositoryShow: PublishRelay<RepositoryListModels.RepositoryShow.Response> = .init()
-    public var updateRepository: PublishRelay<RepositoryListModels.RepositoryCell.Response> = .init()
-    
-    public var errorRelay: PublishRelay<Error?> = .init()
+    public var presentUpdateRepository: PublishRelay<RepositoryListModels.RepositoryCell.Response> = .init()
     
     func bind(to viewController: RepositoryListDisplayLogic) -> Disposable {
         
         let loadDisposable =
-            loadRelay
+            presentLoadRelay
                 .map({ RepositoryListModels.RepositorySequence.ViewModel.init($0.repos) })
                 .bind(to: viewController.displayItemsRelay)
         
         let errorDisposable =
-            errorRelay
+            presentErrorRelay
                 .bind(to: viewController.displayErrorRelay)
         
         let presentRepoShowDisposable =
@@ -34,9 +33,9 @@ class RepositoryListPresenter: RepositoryListPresenterLogic {
                 .bind(to: viewController.displayPresentToRepositoryShow)
         
         let updateRepositoryDisposable =
-            updateRepository
+            presentUpdateRepository
                 .map({ .init($0.repository) })
-                .bind(to: viewController.updateRepository)
+                .bind(to: viewController.displayUpdateRepositoryCellState)
         
         return Disposables.create([loadDisposable,
                                    errorDisposable,

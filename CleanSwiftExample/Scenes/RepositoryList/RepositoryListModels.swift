@@ -35,22 +35,13 @@ struct RepositoryListModels {
                     }
                 }
                 
-                enum Action {
-                    case didTapProfile
-                }
-                
                 let state = BehaviorRelay<State?>(value: nil)
-                let action = PublishRelay<Action>()
                 let identifier: Int
                 
                 private let disposeBag = DisposeBag()
                 
                 init(_ repo: Repository) {
                     self.identifier = repo.id
-                    self.state.accept(State(repo))
-                }
-                
-                func updateState(_ repo: Repository) {
                     self.state.accept(State(repo))
                 }
             }

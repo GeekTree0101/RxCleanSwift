@@ -7,7 +7,7 @@ protocol RepositoryListDisplayLogic: class {
     var displayErrorRelay: PublishRelay<Error?> { get }
     var displayItemsRelay: PublishRelay<RepositoryListModels.RepositorySequence.ViewModel> { get }
     var displayPresentToRepositoryShow: PublishRelay<RepositoryListModels.RepositoryShow.ViewModel> { get }
-    var updateRepository: PublishRelay<RepositoryListModels.RepositoryCell.ViewModel> { get }
+    var displayUpdateRepositoryCellState: PublishRelay<RepositoryListModels.RepositoryCell.ViewModel> { get }
 }
 
 class RepositoryListController:
@@ -19,7 +19,7 @@ ASViewController<RepositoryListContainerNode> & RepositoryListDisplayLogic {
     public var displayErrorRelay: PublishRelay<Error?> = .init()
     public var displayItemsRelay: PublishRelay<RepositoryListModels.RepositorySequence.ViewModel> = .init()
     public var displayPresentToRepositoryShow: PublishRelay<RepositoryListModels.RepositoryShow.ViewModel> = .init()
-    public var updateRepository: PublishRelay<RepositoryListModels.RepositoryCell.ViewModel> = .init()
+    public var displayUpdateRepositoryCellState: PublishRelay<RepositoryListModels.RepositoryCell.ViewModel> = .init()
     
     private var batchContext: ASBatchContext?
     private var items: [RepositoryListModels.RepositorySequence.ViewModel.CellViewModel] = []
@@ -92,7 +92,7 @@ ASViewController<RepositoryListContainerNode> & RepositoryListDisplayLogic {
             })
             .disposed(by: disposeBag)
         
-        self.updateRepository
+        self.displayUpdateRepositoryCellState
             .subscribe(onNext: { [weak self] viewModel in
                 guard let cellViewModel =
                     self?.items.filter({ $0.identifier == viewModel.id }).first else { return }
@@ -126,8 +126,7 @@ extension RepositoryListController: ASTableDataSource {
             
             if let interactor = self.interactor {
                 
-                viewModel.action
-                    .filter({ $0 == .didTapProfile })
+                cellNode.profileNode.rx.tap
                     .withLatestFrom(Observable.just(viewModel.identifier))
                     .map({ .init(repoID: $0) })
                     .bind(to: interactor.didTapRepositoryCell)

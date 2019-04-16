@@ -46,11 +46,6 @@ class RepositoryListCellNode: ASCellNode {
             .bind(to: self.profileNode.rx.isPinned,
                   setNeedsLayout: self.profileNode)
             .disposed(by: disposeBag)
-        
-        profileNode.rx.tap
-            .map { _ in return .didTapProfile }
-            .bind(to: viewModel.action)
-            .disposed(by: disposeBag)
     }
 }
 
