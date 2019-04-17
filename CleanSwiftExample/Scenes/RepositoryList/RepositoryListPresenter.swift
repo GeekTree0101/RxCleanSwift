@@ -10,6 +10,7 @@ protocol RepositoryListPresenterLogic: class {
 
 class RepositoryListPresenter: RepositoryListPresenterLogic {
     
+    // Presenter: It prepares the data to be displayed to the user.
     public var presentLoadRelay: PublishRelay<RepositoryListModels.RepositorySequence.Response> = .init()
     public var presentErrorRelay: PublishRelay<Error?> = .init()
     public var presentRepositoryShow: PublishRelay<RepositoryListModels.RepositoryShow.Response> = .init()

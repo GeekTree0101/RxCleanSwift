@@ -13,7 +13,8 @@ class RepositoryShowInteractorTests: XCTestCase {
 
     override func setUp() {
         self.interactor = RepositoryShowInteractor.init()
-        self.interactor.worker = RepositoryShowWorkerSpyForInteractorTest.init()
+        self.interactor.showWorker = RepositoryShowWorkerSpyForInteractorTest.init()
+        self.interactor.commonWorker = RepositoryCommonWorkerSpyForInteractorTest.init()
         self.disposeBag = DisposeBag()
     }
 
@@ -119,13 +120,16 @@ class RepositoryShowPresenterSpyForInteractorTest: RepositoryShowPresenter {
     
 }
 
-class RepositoryShowWorkerSpyForInteractorTest: RepositoryShowWorker {
+class RepositoryCommonWorkerSpyForInteractorTest: RepositoryCommonWorker {
     
     override func loadCachedRepository(_ id: Int) -> PrimitiveSequence<SingleTrait, Repository> {
         var repo = RepositoryShowInteractorTests.createMockRepository()
         repo.id = id
         return Single.just(repo)
     }
+}
+
+class RepositoryShowWorkerSpyForInteractorTest: RepositoryShowWorker {
     
     override func togglePin(_ id: Int) -> PrimitiveSequence<SingleTrait, Repository> {
         var repo = RepositoryShowInteractorTests.createMockRepository()

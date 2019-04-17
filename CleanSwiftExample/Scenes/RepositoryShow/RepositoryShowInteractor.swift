@@ -16,12 +16,16 @@ protocol RepositoryShowDataStore: class {
 
 class RepositoryShowInteractor: RepositoryShowInteractorLogic & RepositoryShowDataStore {
     
+    // Interactor: It receives user actions from View Controller
     public var loadRepository: PublishRelay<RepositoryShowModels.Show.Request> = .init()
     public var didTapDismissButton: PublishRelay<RepositoryShowModels.Dismiss.Request> = .init()
     public var didTapPin: PublishRelay<RepositoryShowModels.Show.Request> = .init()
     
-    public var worker = RepositoryShowWorker()
+    // Worker: Extract business logic from view controllers into interactors.
+    public var commonWorker = RepositoryCommonWorker.init()
+    public var showWorker = RepositoryShowWorker()
     
+    // DataSotre: It is cached data and pass to other controller by router
     public var repositoryStore: ReactiveDataStore<Repository>?
     
     private var repositoryIdentifier: Int {
@@ -32,14 +36,14 @@ class RepositoryShowInteractor: RepositoryShowInteractorLogic & RepositoryShowDa
         
         let loadRepoDisposable = loadRepository
             .flatMap({ [unowned self] _ -> Single<Repository> in
-                return self.worker.loadCachedRepository(self.repositoryIdentifier)
+                return self.commonWorker.loadCachedRepository(self.repositoryIdentifier)
             })
             .map({ RepositoryShowModels.Show.Response.init(repo: $0) })
             .bind(to: presenter.createRepositoryShowViewModel)
         
         let dismissDisposable = didTapDismissButton
             .flatMap({ [unowned self] _ -> Single<Repository> in
-                return self.worker.loadCachedRepository(self.repositoryIdentifier)
+                return self.commonWorker.loadCachedRepository(self.repositoryIdentifier)
             })
             .map({ [unowned self] repo in
                 self.repositoryStore?.update(repo)
@@ -49,7 +53,7 @@ class RepositoryShowInteractor: RepositoryShowInteractorLogic & RepositoryShowDa
         
         let didTapPinDisposable = didTapPin
             .flatMap({ [unowned self] _ -> Single<Repository> in
-                return self.worker.togglePin(self.repositoryIdentifier)
+                return self.showWorker.togglePin(self.repositoryIdentifier)
             })
             .map({ RepositoryShowModels.Show.Response.init(repo: $0) })
             .bind(to: presenter.createRepositoryShowViewModel)

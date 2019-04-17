@@ -22,7 +22,7 @@ class RepositoryListRouter: RepositoryListRouterLogic & RepositoryListDataPassin
         let presentToRepoShowDisposable =
             presentToRepositoryShowRelay
                 .subscribe(onNext: { [weak self, weak viewController] _ in
-                    guard let targetId = self?.dataStore?.displayTargetIdentifier,
+                    guard let targetId = self?.dataStore?.presentRepositoryShowIdentifier,
                         let repositoryStore = self?.dataStore?.repositoryStores
                             .filter({ $0.value.id == targetId }).first else { return }
                     
