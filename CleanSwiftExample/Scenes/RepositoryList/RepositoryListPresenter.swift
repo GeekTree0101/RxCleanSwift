@@ -27,7 +27,7 @@ class RepositoryListPresenter: RepositoryListPresenterLogic {
         
         let presentRepoShowDisposable =
             presentRepositoryShow
-                .map({ _ in return .init() })
+                .map({ _ in return RepositoryListModels.RepositoryShow.ViewModel.init() })
                 .bind(to: viewController.displayPresentToRepositoryShow)
         
         return Disposables.create([loadDisposable,

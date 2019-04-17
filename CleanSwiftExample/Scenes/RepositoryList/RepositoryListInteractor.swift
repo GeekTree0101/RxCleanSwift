@@ -32,7 +32,7 @@ class RepositoryListInteractor: RepositoryListInteractorLogic & RepositoryListDa
             })
             .map({ [unowned self] repositories -> [ReactiveDataStore<Repository>] in
                 let repoStores = self.worker.convertToRepositoryDataStore(repositories)
-                self.repositoryStores += repoStores
+                self.repositoryStores.append(contentsOf: repoStores)
                 return repoStores
             })
             .map({ RepositoryListModels.RepositorySequence.Response(repos: $0) })
@@ -49,7 +49,7 @@ class RepositoryListInteractor: RepositoryListInteractorLogic & RepositoryListDa
         let repoShowDisposable = didTapRepositoryCell
             .map({ [unowned self] request in
                 self.displayTargetIdentifier = request.repoID
-                return .init()
+                return RepositoryListModels.RepositoryShow.Response.init()
             })
             .bind(to: presenter.presentRepositoryShow)
         

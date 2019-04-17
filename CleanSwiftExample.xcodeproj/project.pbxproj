@@ -41,6 +41,9 @@
 		9B5A87532265D68600A24E88 /* repository.json in Resources */ = {isa = PBXBuildFile; fileRef = 9B5A87522265D68600A24E88 /* repository.json */; };
 		9B5A87552265D6D400A24E88 /* ReadJSONFile.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A87542265D6D400A24E88 /* ReadJSONFile.swift */; };
 		9B5A87582266164400A24E88 /* ReactiveDataStore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A87572266164400A24E88 /* ReactiveDataStore.swift */; };
+		9B5A875A2266A7E500A24E88 /* RepositoryShowPresenterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A87592266A7E500A24E88 /* RepositoryShowPresenterTests.swift */; };
+		9B5A875E2266A80200A24E88 /* RepositoryShowWorkerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A875D2266A80200A24E88 /* RepositoryShowWorkerTests.swift */; };
+		9B5A87622266A84E00A24E88 /* RepositoryShowControllerTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9B5A87612266A84E00A24E88 /* RepositoryShowControllerTests.swift */; };
 		A4C3494E27A6EAD0294F7556 /* Pods_CleanSwiftExample_CleanSwiftExampleTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8752C6B05A212DF200D7D0A4 /* Pods_CleanSwiftExample_CleanSwiftExampleTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -95,6 +98,9 @@
 		9B5A87522265D68600A24E88 /* repository.json */ = {isa = PBXFileReference; lastKnownFileType = text.json; path = repository.json; sourceTree = "<group>"; };
 		9B5A87542265D6D400A24E88 /* ReadJSONFile.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReadJSONFile.swift; sourceTree = "<group>"; };
 		9B5A87572266164400A24E88 /* ReactiveDataStore.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ReactiveDataStore.swift; sourceTree = "<group>"; };
+		9B5A87592266A7E500A24E88 /* RepositoryShowPresenterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryShowPresenterTests.swift; sourceTree = "<group>"; };
+		9B5A875D2266A80200A24E88 /* RepositoryShowWorkerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryShowWorkerTests.swift; sourceTree = "<group>"; };
+		9B5A87612266A84E00A24E88 /* RepositoryShowControllerTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RepositoryShowControllerTests.swift; sourceTree = "<group>"; };
 		D0269B71F94FC8A870069417 /* Pods-CleanSwiftExample.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CleanSwiftExample.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CleanSwiftExample/Pods-CleanSwiftExample.debug.xcconfig"; sourceTree = "<group>"; };
 		D07884F9EC59008542BDA634 /* Pods-CleanSwiftExample-CleanSwiftExampleTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CleanSwiftExample-CleanSwiftExampleTests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-CleanSwiftExample-CleanSwiftExampleTests/Pods-CleanSwiftExample-CleanSwiftExampleTests.debug.xcconfig"; sourceTree = "<group>"; };
 		E7E4311CD4531FB9FB223339 /* Pods_CleanSwiftExample.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CleanSwiftExample.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -289,6 +295,9 @@
 			isa = PBXGroup;
 			children = (
 				9B5A874F2265D3C300A24E88 /* RepositoryShowInteractorTests.swift */,
+				9B5A87592266A7E500A24E88 /* RepositoryShowPresenterTests.swift */,
+				9B5A875D2266A80200A24E88 /* RepositoryShowWorkerTests.swift */,
+				9B5A87612266A84E00A24E88 /* RepositoryShowControllerTests.swift */,
 			);
 			path = RepositoryShow;
 			sourceTree = "<group>";
@@ -605,6 +614,9 @@
 			files = (
 				9B5A87502265D3C300A24E88 /* RepositoryShowInteractorTests.swift in Sources */,
 				9B5A87552265D6D400A24E88 /* ReadJSONFile.swift in Sources */,
+				9B5A875A2266A7E500A24E88 /* RepositoryShowPresenterTests.swift in Sources */,
+				9B5A87622266A84E00A24E88 /* RepositoryShowControllerTests.swift in Sources */,
+				9B5A875E2266A80200A24E88 /* RepositoryShowWorkerTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

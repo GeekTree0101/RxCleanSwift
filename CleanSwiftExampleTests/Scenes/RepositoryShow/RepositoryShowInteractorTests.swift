@@ -13,7 +13,7 @@ class RepositoryShowInteractorTests: XCTestCase {
 
     override func setUp() {
         self.interactor = RepositoryShowInteractor.init()
-        self.interactor.worker = RepositoryShowWorkerSpy.init()
+        self.interactor.worker = RepositoryShowWorkerSpyForInteractorTest.init()
         self.disposeBag = DisposeBag()
     }
 
@@ -26,7 +26,7 @@ class RepositoryShowInteractorTests: XCTestCase {
     }
     
     func testLoadRepository() {
-        let spyPresent = RepositoryShowPresenterSpy.init()
+        let spyPresent = RepositoryShowPresenterSpyForInteractorTest.init()
         interactor.bind(to: spyPresent).disposed(by: disposeBag)
         var repo = RepositoryShowInteractorTests.createMockRepository()
         repo.id = 999
@@ -54,7 +54,7 @@ class RepositoryShowInteractorTests: XCTestCase {
     }
 
     func testDismiss() {
-        let spyPresent = RepositoryShowPresenterSpy.init()
+        let spyPresent = RepositoryShowPresenterSpyForInteractorTest.init()
         interactor.bind(to: spyPresent).disposed(by: disposeBag)
         var repo = RepositoryShowInteractorTests.createMockRepository()
         repo.id = 999
@@ -85,7 +85,7 @@ class RepositoryShowInteractorTests: XCTestCase {
     }
     
     func testTapPin() {
-        let spyPresent = RepositoryShowPresenterSpy.init()
+        let spyPresent = RepositoryShowPresenterSpyForInteractorTest.init()
         interactor.bind(to: spyPresent).disposed(by: disposeBag)
         var repo = RepositoryShowInteractorTests.createMockRepository()
         repo.id = 999
@@ -114,12 +114,12 @@ class RepositoryShowInteractorTests: XCTestCase {
     }
 }
 
-class RepositoryShowPresenterSpy: RepositoryShowPresenter {
+class RepositoryShowPresenterSpyForInteractorTest: RepositoryShowPresenter {
     
     
 }
 
-class RepositoryShowWorkerSpy: RepositoryShowWorker {
+class RepositoryShowWorkerSpyForInteractorTest: RepositoryShowWorker {
     
     override func loadCachedRepository(_ id: Int) -> PrimitiveSequence<SingleTrait, Repository> {
         var repo = RepositoryShowInteractorTests.createMockRepository()

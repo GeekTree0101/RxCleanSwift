@@ -119,7 +119,7 @@ extension RepositoryListController: ASTableDataSource {
                 
                 cellNode.profileNode.rx.tap
                     .withValue(type: Int.self, value: viewModel.identifier)
-                    .map({ .init(repoID: $0) })
+                    .map({ RepositoryListModels.RepositoryShow.Request.init(repoID: $0) })
                     .bind(to: interactor.didTapRepositoryCell)
                     .disposed(by: cellNode.disposeBag)
             }

@@ -102,12 +102,12 @@ class RepoShowContainerNode: ASDisplayNode {
     func bind(action: RepositoryShowInteractorLogic) {
         
         self.pinButtonNode.rx.tap
-            .map({ .init() })
+            .map({ RepositoryShowModels.Show.Request.init() })
             .bind(to: action.didTapPin)
             .disposed(by: disposeBag)
         
         self.dismissButtonNode.rx.tap
-            .map { .init() }
+            .map { RepositoryShowModels.Dismiss.Request.init() }
             .bind(to: action.didTapDismissButton)
             .disposed(by: disposeBag)
     }
