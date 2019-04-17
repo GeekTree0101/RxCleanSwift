@@ -70,7 +70,7 @@ DEPENDENCIES:
   - RxOptional
   - RxSwift
   - RxTest (~> 4.4.0)
-  - Texture
+  - Texture (= 2.8)
 
 SPEC REPOS:
   https://github.com/cocoapods/specs.git:
@@ -107,6 +107,6 @@ SPEC CHECKSUMS:
   RxTest: 6433d5b6229f5de424fa534bc22b5e6c38b0b671
   Texture: fc6e0157201f3a6e503d364c147b1872e365cef4
 
-PODFILE CHECKSUM: 416967ceac2fefae454a2a29e389a6f7a6c46655
+PODFILE CHECKSUM: cbc20cb20fff9396afbfb5ff3f697deb7f56659a
 
 COCOAPODS: 1.5.3

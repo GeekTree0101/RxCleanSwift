@@ -11,8 +11,8 @@ class RepositoryListCellNode: ASCellNode {
         static let contentSpacing: CGFloat = 10.0
     }
     
-    lazy var profileNode: ProfileNode = .init(scale: .medium)
-    lazy var infoNode: InformationNode = .init(align: .start)
+    let profileNode: ProfileNode = .init(scale: .medium)
+    let infoNode: InformationNode = .init(align: .start)
     
     var disposeBag = DisposeBag()
     

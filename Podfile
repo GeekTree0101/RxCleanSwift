@@ -2,7 +2,7 @@ use_frameworks!
 inhibit_all_warnings!
 
 target 'CleanSwiftExample' do
-  pod 'Texture'
+  pod 'Texture', '2.8'
   pod 'RxSwift'
   pod 'RxCocoa'
   pod 'RxCocoa-Texture'

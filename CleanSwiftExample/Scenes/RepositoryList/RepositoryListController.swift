@@ -22,7 +22,7 @@ ASViewController<RepositoryListContainerNode> & RepositoryListDisplayLogic {
     private var batchContext: ASBatchContext?
     private var items: [RepositoryListModels.RepositorySequence.ViewModel.CellViewModel] = []
     private var since: Int? {
-        return self.items.count == 0 ? nil: self.items.count
+        return self.items.last?.identifier
     }
     
     let disposeBag = DisposeBag()

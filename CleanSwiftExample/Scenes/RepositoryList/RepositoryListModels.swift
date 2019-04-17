@@ -42,8 +42,7 @@ struct RepositoryListModels {
                 
                 init(_ repositoryStore: ReactiveDataStore<Repository>) {
                     
-                    repositoryStore
-                        .asObservable()
+                    repositoryStore.store
                         .map({ State($0) })
                         .bind(to: state)
                         .disposed(by: disposeBag)
