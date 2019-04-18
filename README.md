@@ -43,6 +43,9 @@ View Controller is responsible for configuring all of the View’s properties. (
 <br/>
 View Controller는 모든 View 속성을 구성합니다. (VIPER 아키텍쳐와 동일)
 
+- 구성요소 (Components)
+  - DisplayLogic: Presenter로 부터 받은 ViewModel을 처리합니다. 스펙에 따라 뷰를 그리거나 라우팅에게 명령을 전달합니다. (Processes ViewModel received from Presenter. Draw the UI according to the specification or pass the command to the routing.)
+
 ## Worker
 
 <img src= "https://github.com/GeekTree0101/CleanSwift-Example/blob/master/res/Worker.png" />
@@ -59,11 +62,103 @@ Interactor를 불필요하게 복잡하게 만들고 비즈니스 로직 세부 
 > ### What's Router?
 Router is responsible for transferring data to various application screens and switching between them.
 <br/>
-라우터는 다양한 응용 프로그램 화면으로 데이터를 전송하고 그 사이를 전환합니다. 
+라우터는 다양한 화면으로 데이터를 전송하고 그 사이를 전환합니다. 
+
+- 구성요소(Components)
+  - RouterLogic: 다른 화면으로 전달하기 위한 명시적인 스펙입니다. (An explicit specification for passing to another screen.)
+  - DataPassing: 다른 화면으로 전달될 데이터를 가지고 있습니다. (It has data to be passed to the other screen.)
+  
+> #### DataPassing Example  
+```swift
+protocol ApplicationDataSotre: class {
+
+    var id: Int { get set }
+}
+
+protocol ApplicationDataPassing: class {
+    
+    var dataStore: ApplicationDataSotre? { get set }
+}
+```
+
+## DataStore & DataPassing
+
+### DataStore
+<img src="https://github.com/GeekTree0101/CleanSwift-Example/blob/master/res/Data%20Store.png" />
+앞서 말했듯이 Interactor에는 다양한 Worker와 그리고 Interactor logic, DataStore를 가집니다. 
+위의 그림과 같이 유저가 어떠한 행위를 하면 Logic에 따라 Worker에서 비즈니스로직을 수행하고 반환된 값을 필요에 따라 DataStore에 저장을 합니다. 
+<br/>
+As mentioned before, Interactor contains various worker, Interactor logic, DataStore.
+As shown in the figure above, if the user performs any action, the worker executes the business logic according to Interactor Logic and next stores the returned value in the DataStore as needed.
+
+### DataPassing
+우선 Router및 Interactor가 아래의 코드와 같이 구성되어 있습니다.
+
+##### Router
+```swift
+protocol RepositoryListDataPassing: class {
+    
+    var dataStore: RepositoryListDataSotre? { get set }
+}
+
+class RepositoryListRouter: RepositoryListRouterLogic & RepositoryListDataPassing {
+    
+    var dataStore: RepositoryListDataSotre?
+    
+    // ...
+```
+
+##### Interactor
+```swift
+
+protocol RepositoryListDataSotre: class {
+    
+    var repositoryStores: [ReactiveDataStore<Repository>] { get set }
+    var presentRepositoryShowIdentifier: Int? { get set }
+}
+
+class RepositoryListInteractor: RepositoryListInteractorLogic & RepositoryListDataSotre {
+    
+    // ...
+    
+    // DataSotre: It is cached data and pass to other controller by router
+    public var repositoryStores: [ReactiveDataStore<Repository>] = []
+    public var presentRepositoryShowIdentifier: Int?
+    
+```
+
+##### VIP Cycle configuration
+```swift
+func configureVIPCycle() {
+        let viewController = self
+        let presenter = RepositoryListPresenter()
+        let interactor = RepositoryListInteractor()
+        let router = RepositoryListRouter.init()
+        
+        // ... Cycle binding
+        
+        router.dataStore = interactor // HERE!
+        viewController.router = router
+        viewController.interactor = interactor
+    }
+```
+
+Router의  dataStore property는 interactor의 dataStore를 참조합니다.
+
+
+<img src="https://github.com/GeekTree0101/CleanSwift-Example/blob/master/res/Data%20Passing.png" />
+
+위의 그림과 같은 동작에 대해서 설명하고자 합니다. 
+
+1: 유저의 행동을 Interactor로 송신합니다. (Send a Request)
+2: 비즈니스 로직에 따라 가공된 데이터를 DataStore에 저장후 Presenter로 응답합니다. (DataStore & Returning Response)
+3: 뷰컨트롤러에 최종 행위 동작에 대해서 명령합니다. (Presenter -> DisplayLogic of ViewController)
+4: DisplayLogic의 명령에 따라 라우터를 동작시킵니다. (DisplayLogic -> Router)
+5: 라우터는 참조하고 있는 DataStore를 이용해 다음 화면으로 데이터를 전달합니다. (The router uses the referenced DataStore to pass data to the next screen.)
+
 
 ## TODO-List
-- Remove ReactorKit Dependency, Replace to RepositoryListCellNode VIP or other methods
-- Write a test code
+- Write a test code (RepositoryList VIP)
 - Make a templates or copy clean swift basic templates
 
 
