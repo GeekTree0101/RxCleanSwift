@@ -8,10 +8,10 @@ import RxCocoa
 
 class RepositoryCommonWorkerTests: XCTestCase {
     
-    var worker: RepositoryCommonWorkerSpy!
+    var worker: RepositoryCommonWorkerTests.RepositoryCommonWorkerSpy!
     
     override func setUp() {
-        worker = RepositoryCommonWorkerSpy.init()
+        self.worker = .init()
     }
     
     override func tearDown() {
@@ -25,15 +25,19 @@ class RepositoryCommonWorkerTests: XCTestCase {
     }
 }
 
-class RepositoryCommonWorkerSpy: RepositoryCommonWorker {
+extension RepositoryCommonWorkerTests {
     
-    let repository: Repository = {
-        return ReadJSONFile.shared.load("repository.json", type: Repository.self, from: RepositoryCommonWorkerSpy.self)!
-    }()
-    
-    override func loadCachedRepository(_ id: Int) -> PrimitiveSequence<SingleTrait, Repository> {
-        var repo = self.repository
-        repo.id = id
-        return Single.just(repo)
+    class RepositoryCommonWorkerSpy: RepositoryCommonWorker {
+        
+        let repository: Repository = {
+            return ReadJSONFile.shared.load("repository.json", type: Repository.self, from: RepositoryCommonWorkerSpy.self)!
+        }()
+        
+        override func loadCachedRepository(_ id: Int) -> PrimitiveSequence<SingleTrait, Repository> {
+            var repo = self.repository
+            repo.id = id
+            return Single.just(repo)
+        }
     }
 }
+
