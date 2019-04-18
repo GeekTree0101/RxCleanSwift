@@ -9,26 +9,23 @@ import RxCocoa
 class RepositoryShowInteractorTests: XCTestCase {
     
     var interactor: RepositoryShowInteractor!
+    var presenter: RepositoryShowInteractorTests.RepositoryShowPresenterSpy!
     var disposeBag = DisposeBag()
 
     override func setUp() {
-        self.interactor = RepositoryShowInteractor.init()
-        self.interactor.showWorker = RepositoryShowWorkerSpyForInteractorTest.init()
-        self.interactor.commonWorker = RepositoryCommonWorkerSpyForInteractorTest.init()
         self.disposeBag = DisposeBag()
+        self.interactor = RepositoryShowInteractor.init()
+        self.interactor.showWorker = RepositoryShowInteractorTests.RepositoryShowWorkerSpy.init()
+        self.interactor.commonWorker = RepositoryShowInteractorTests.RepositoryCommonWorkerSpy.init()
+        self.presenter = RepositoryShowInteractorTests.RepositoryShowPresenterSpy.init()
+        self.interactor.bind(to: presenter).disposed(by: disposeBag)
     }
 
     override func tearDown() {
         
     }
     
-    static func createMockRepository() -> Repository {
-        return ReadJSONFile.shared.load("repository.json", type: Repository.self, from: RepositoryShowInteractorTests.self)!
-    }
-    
     func testLoadRepository() {
-        let spyPresent = RepositoryShowPresenterSpyForInteractorTest.init()
-        interactor.bind(to: spyPresent).disposed(by: disposeBag)
         var repo = RepositoryShowInteractorTests.createMockRepository()
         repo.id = 999
         interactor.repositoryStore = ReactiveDataStore<Repository>.init(repo)
@@ -44,7 +41,7 @@ class RepositoryShowInteractorTests: XCTestCase {
             .bind(to: interactor.didTapPin)
             .disposed(by: disposeBag)
         
-        spyPresent.createRepositoryShowViewModel
+        presenter.createRepositoryShowViewModel
             .map({ $0.repo.id })
             .subscribe(outputObserver)
             .disposed(by: disposeBag)
@@ -55,8 +52,6 @@ class RepositoryShowInteractorTests: XCTestCase {
     }
 
     func testDismiss() {
-        let spyPresent = RepositoryShowPresenterSpyForInteractorTest.init()
-        interactor.bind(to: spyPresent).disposed(by: disposeBag)
         var repo = RepositoryShowInteractorTests.createMockRepository()
         repo.id = 999
         interactor.repositoryStore = ReactiveDataStore<Repository>.init(repo)
@@ -75,7 +70,7 @@ class RepositoryShowInteractorTests: XCTestCase {
             .bind(to: interactor.didTapDismissButton)
             .disposed(by: disposeBag)
         
-        spyPresent.dismissRepositoryShow
+        presenter.dismissRepositoryShow
             .subscribe(outputObserver)
             .disposed(by: disposeBag)
         
@@ -86,8 +81,6 @@ class RepositoryShowInteractorTests: XCTestCase {
     }
     
     func testTapPin() {
-        let spyPresent = RepositoryShowPresenterSpyForInteractorTest.init()
-        interactor.bind(to: spyPresent).disposed(by: disposeBag)
         var repo = RepositoryShowInteractorTests.createMockRepository()
         repo.id = 999
         interactor.repositoryStore = ReactiveDataStore<Repository>.init(repo)
@@ -104,7 +97,7 @@ class RepositoryShowInteractorTests: XCTestCase {
             .bind(to: interactor.didTapPin)
             .disposed(by: disposeBag)
         
-        spyPresent.createRepositoryShowViewModel
+        presenter.createRepositoryShowViewModel
             .map({ $0.repo.id })
             .subscribe(outputObserver)
             .disposed(by: disposeBag)
@@ -115,26 +108,33 @@ class RepositoryShowInteractorTests: XCTestCase {
     }
 }
 
-class RepositoryShowPresenterSpyForInteractorTest: RepositoryShowPresenter {
+extension RepositoryShowInteractorTests {
     
-    
-}
-
-class RepositoryCommonWorkerSpyForInteractorTest: RepositoryCommonWorker {
-    
-    override func loadCachedRepository(_ id: Int) -> PrimitiveSequence<SingleTrait, Repository> {
-        var repo = RepositoryShowInteractorTests.createMockRepository()
-        repo.id = id
-        return Single.just(repo)
+    static func createMockRepository() -> Repository {
+        return ReadJSONFile.shared.load("repository.json", type: Repository.self, from: RepositoryShowInteractorTests.self)!
     }
-}
-
-class RepositoryShowWorkerSpyForInteractorTest: RepositoryShowWorker {
     
-    override func togglePin(_ id: Int) -> PrimitiveSequence<SingleTrait, Repository> {
-        var repo = RepositoryShowInteractorTests.createMockRepository()
-        repo.id = id
-        repo.isPinned = true
-        return Single.just(repo)
+    class RepositoryShowPresenterSpy: RepositoryShowPresenter {
+        
+        
+    }
+    
+    class RepositoryCommonWorkerSpy: RepositoryCommonWorker {
+        
+        override func loadCachedRepository(_ id: Int) -> PrimitiveSequence<SingleTrait, Repository> {
+            var repo = RepositoryShowInteractorTests.createMockRepository()
+            repo.id = id
+            return Single.just(repo)
+        }
+    }
+    
+    class RepositoryShowWorkerSpy: RepositoryShowWorker {
+        
+        override func togglePin(_ id: Int) -> PrimitiveSequence<SingleTrait, Repository> {
+            var repo = RepositoryShowInteractorTests.createMockRepository()
+            repo.id = id
+            repo.isPinned = true
+            return Single.just(repo)
+        }
     }
 }

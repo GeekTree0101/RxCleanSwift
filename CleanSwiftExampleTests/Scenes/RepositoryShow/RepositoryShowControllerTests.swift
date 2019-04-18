@@ -11,7 +11,7 @@ import UIKit
 class RepositoryShowControllerTests: XCTestCase {
     
     var controller: RepositoryShowController!
-    var interactorLogic: RepositoryShowInteractorLogicSpy!
+    var interactorLogic: RepositoryShowControllerTests.RepositoryShowInteractorLogicSpy!
     var disposeBag = DisposeBag()
     var scheduler: TestScheduler!
     
@@ -19,7 +19,7 @@ class RepositoryShowControllerTests: XCTestCase {
         scheduler = TestScheduler.init(initialClock: 0)
         controller = RepositoryShowController.init()
         disposeBag = DisposeBag()
-        interactorLogic = RepositoryShowInteractorLogicSpy.init()
+        interactorLogic = RepositoryShowControllerTests.RepositoryShowInteractorLogicSpy.init()
         controller.interactor = interactorLogic
         controller.node.disposeBag = DisposeBag()
         controller.node.bind(action: interactorLogic)
@@ -60,9 +60,12 @@ class RepositoryShowControllerTests: XCTestCase {
     }
 }
 
-class RepositoryShowInteractorLogicSpy: RepositoryShowInteractorLogic {
+extension RepositoryShowControllerTests {
     
-    public var loadRepository: PublishRelay<RepositoryShowModels.Show.Request> = .init()
-    public var didTapDismissButton: PublishRelay<RepositoryShowModels.Dismiss.Request> = .init()
-    public var didTapPin: PublishRelay<RepositoryShowModels.Show.Request> = .init()
+    class RepositoryShowInteractorLogicSpy: RepositoryShowInteractorLogic {
+        
+        public var loadRepository: PublishRelay<RepositoryShowModels.Show.Request> = .init()
+        public var didTapDismissButton: PublishRelay<RepositoryShowModels.Dismiss.Request> = .init()
+        public var didTapPin: PublishRelay<RepositoryShowModels.Show.Request> = .init()
+    }
 }

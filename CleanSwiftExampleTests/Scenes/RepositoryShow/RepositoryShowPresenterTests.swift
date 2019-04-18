@@ -9,6 +9,7 @@ import RxCocoa
 class RepositoryShowPresenterTests: XCTestCase {
     
     var presenter: RepositoryShowPresenter!
+    var controller: RepositoryShowPresenterTests.RepositoryShowControllerSpy!
     var disposeBag = DisposeBag()
     var scheduler: TestScheduler!
     
@@ -17,8 +18,10 @@ class RepositoryShowPresenterTests: XCTestCase {
     }()
     
     override func setUp() {
-        presenter = RepositoryShowPresenter.init()
         disposeBag = DisposeBag()
+        controller = RepositoryShowPresenterTests.RepositoryShowControllerSpy.init()
+        presenter = RepositoryShowPresenter.init()
+        presenter.bind(to: controller).disposed(by: disposeBag)
         scheduler = TestScheduler.init(initialClock: 0)
     }
 
@@ -27,14 +30,11 @@ class RepositoryShowPresenterTests: XCTestCase {
     }
 
     func testCreateRepositoryShowViewModel() {
-        let spyController = RepositoryShowControllerSpyForPresenterTest.init()
-        presenter.bind(to: spyController).disposed(by: disposeBag)
-        
         let input = scheduler.createHotObservable([.next(100, RepositoryShowModels.Show.Response.init(repo: repository))])
         let output = scheduler.createObserver(RepositoryShowModels.Show.ViewModel.self)
         
         input.bind(to: presenter.createRepositoryShowViewModel).disposed(by: disposeBag)
-        spyController.displayRepositoryShowState.subscribe(output).disposed(by: disposeBag)
+        controller.displayRepositoryShowState.subscribe(output).disposed(by: disposeBag)
         
         scheduler.start()
         
@@ -43,14 +43,11 @@ class RepositoryShowPresenterTests: XCTestCase {
     }
 
     func testDismissRepositoryShow() {
-        let spyController = RepositoryShowControllerSpyForPresenterTest.init()
-        presenter.bind(to: spyController).disposed(by: disposeBag)
-        
         let input = scheduler.createHotObservable([.next(100, RepositoryShowModels.Dismiss.Response.init())])
         let output = scheduler.createObserver(RepositoryShowModels.Dismiss.ViewModel.self)
         
         input.bind(to: presenter.dismissRepositoryShow).disposed(by: disposeBag)
-        spyController.displayDissmiss.subscribe(output).disposed(by: disposeBag)
+        controller.displayDissmiss.subscribe(output).disposed(by: disposeBag)
         
         scheduler.start()
         
@@ -59,8 +56,11 @@ class RepositoryShowPresenterTests: XCTestCase {
     }
 }
 
-class RepositoryShowControllerSpyForPresenterTest: RepositoryShowController {
+extension RepositoryShowPresenterTests {
     
-    
-    
+    class RepositoryShowControllerSpy: RepositoryShowController {
+        
+        
+    }
 }
+

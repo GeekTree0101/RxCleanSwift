@@ -8,10 +8,10 @@ import RxCocoa
 
 class RepositoryShowWorkerTests: XCTestCase {
     
-    var worker: RepositoryShowWorkerSpy!
+    var worker: RepositoryShowWorkerTests.RepositoryShowWorkerSpy!
     
     override func setUp() {
-        worker = RepositoryShowWorkerSpy.init()
+        worker = RepositoryShowWorkerTests.RepositoryShowWorkerSpy.init()
     }
     
     override func tearDown() {
@@ -26,16 +26,20 @@ class RepositoryShowWorkerTests: XCTestCase {
     }
 }
 
-class RepositoryShowWorkerSpy: RepositoryShowWorker {
+extension RepositoryShowWorkerTests {
     
-    let repository: Repository = {
-        return ReadJSONFile.shared.load("repository.json", type: Repository.self, from: RepositoryShowWorkerSpy.self)!
-    }()
-    
-    override func togglePin(_ id: Int) -> PrimitiveSequence<SingleTrait, Repository> {
-        var repo = self.repository
-        repo.id = id
-        repo.isPinned = true
-        return Single.just(repo)
+    class RepositoryShowWorkerSpy: RepositoryShowWorker {
+        
+        let repository: Repository = {
+            return ReadJSONFile.shared.load("repository.json", type: Repository.self, from: RepositoryShowWorkerSpy.self)!
+        }()
+        
+        override func togglePin(_ id: Int) -> PrimitiveSequence<SingleTrait, Repository> {
+            var repo = self.repository
+            repo.id = id
+            repo.isPinned = true
+            return Single.just(repo)
+        }
     }
 }
+
