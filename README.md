@@ -150,11 +150,11 @@ Router의  dataStore property는 interactor의 dataStore를 참조합니다.
 
 위의 그림과 같은 동작에 대해서 설명하고자 합니다. 
 
-1: 유저의 행동을 Interactor로 송신합니다. (Send a Request)
-2: 비즈니스 로직에 따라 가공된 데이터를 DataStore에 저장후 Presenter로 응답합니다. (DataStore & Returning Response)
-3: 뷰컨트롤러에 최종 행위 동작에 대해서 명령합니다. (Presenter -> DisplayLogic of ViewController)
-4: DisplayLogic의 명령에 따라 라우터를 동작시킵니다. (DisplayLogic -> Router)
-5: 라우터는 참조하고 있는 DataStore를 이용해 다음 화면으로 데이터를 전달합니다. (The router uses the referenced DataStore to pass data to the next screen.)
+- 1: 유저의 행동을 Interactor로 송신합니다. (Send a Request)
+- 2: 비즈니스 로직에 따라 가공된 데이터를 DataStore에 저장후 Presenter로 응답합니다. (DataStore & Returning Response)
+- 3: 뷰컨트롤러에 최종 행위 동작에 대해서 명령합니다. (Presenter -> DisplayLogic of ViewController)
+- 4: DisplayLogic의 명령에 따라 라우터를 동작시킵니다. (DisplayLogic -> Router)
+- 5: 라우터는 참조하고 있는 DataStore를 이용해 다음 화면으로 데이터를 전달합니다. (The router uses the referenced DataStore to pass data to the next screen.)
 
 
 ## TODO-List
